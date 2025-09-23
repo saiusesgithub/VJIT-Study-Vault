@@ -14,6 +14,7 @@ class MyApp extends StatelessWidget {
       title: 'VJIT Study Vault',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
+        fontFamily: 'Poppins',
       ),
       home: const OnboardingPage(),
     );

@@ -11,14 +11,17 @@ class OnboardingPage extends StatefulWidget {
 class _OnboardingPageState extends State<OnboardingPage> {
   @override
   Widget build(BuildContext context) {
-    List<Widget> pages = [pageZero()];
+    int currentPageIndex = 0;
+    List<Widget> pages = [pageZero(), pageOne(), pageTwo(), pageThree()];
     return Scaffold(
       body: ConcentricPageView(
+        nextButtonBuilder: (context) =>
+            Icon(Icons.arrow_forward, color: Colors.white),
         colors: const <Color>[Colors.red, Colors.blue, Colors.red, Colors.blue],
         itemCount: 4,
         physics: const NeverScrollableScrollPhysics(),
-        itemBuilder: (int index) {
-          return Center(child: pages[index]);
+        itemBuilder: (int currentPageIndex) {
+          return Center(child: pages[currentPageIndex]);
         },
       ),
     );
@@ -26,27 +29,52 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   Widget pageZero() {
     return Container(
-      // color: Colors.red,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset('assets/logos/vjit_logo.png'),
-            Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/logos/vjit_logo.png'),
-                ),
+            SizedBox(
+              height: 150,
+              width: 150,
+              child: Image.asset('assets/logos/vjit_logo.png'),
+            ),
+            SizedBox(height: 10),
+            Text(
+              'Welcome to VJIT Study Vault',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                fontFamily: 'Orbitron',
               ),
             ),
-            Text('Welcome to VJIT Study Vault'),
-            Text('One app for every branch, every year'),
-            Text('By students, for students'),
+            SizedBox(height: 50),
+            Text(
+              'One app for every branch, every year',
+              style: TextStyle(color: Colors.white, fontFamily: 'Orbitron'),
+            ),
+            SizedBox(height: 20),
+            Text(
+              'By students, for students',
+              style: TextStyle(color: Colors.white, fontFamily: 'Orbitron'),
+            ),
           ],
         ),
       ),
     );
+  }
+
+  Widget pageOne() {
+    return Container();
+  }
+
+  Widget pageTwo() {
+    return Container();
+  }
+
+  Widget pageThree() {
+    return Container();
   }
 }
