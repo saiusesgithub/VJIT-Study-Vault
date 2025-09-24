@@ -67,14 +67,153 @@ class _OnboardingPageState extends State<OnboardingPage> {
   }
 
   Widget pageOne() {
-    return Container();
+    return Container(
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text('IMAGE', style: TextStyle(fontFamily: 'Orbitron')),
+
+            Text(
+              'Everything in one place',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                fontFamily: 'Orbitron',
+              ),
+            ),
+
+            SizedBox(height: 50),
+
+            Text(
+              ' - Subject Notes\n - Previous Question Papers\n - Assignments and Lab Manuals',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                fontFamily: 'Orbitron',
+              ),
+            ),
+
+            SizedBox(height: 50),
+
+            Text(
+              'No more messy Drive/WhatsApp groups',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                fontFamily: 'Orbitron',
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget pageTwo() {
-    return Container();
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text('IMAGE', style: TextStyle(fontFamily: 'Orbitron')),
+
+          Text(
+            'Simple And Personal',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              fontFamily: 'Orbitron',
+            ),
+          ),
+
+          SizedBox(height: 50),
+
+          Text(
+            '1) Choose your branch & year once\n2) See only your class materials\n3) Download anytime -> use offline anytime',
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              fontFamily: 'Orbitron',
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget pageThree() {
-    return Container();
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            'Ready to study smarter?',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              fontFamily: 'Orbitron',
+            ),
+          ),
+          SizedBox(height: 10),
+          Text(
+            'Let\'s set up your branch and year',
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              fontFamily: 'Orbitron',
+            ),
+          ),
+          SizedBox(height: 60),
+
+          DropdownMenu(
+            width: 200,
+            label: Text('branch'),
+            dropdownMenuEntries: [
+              DropdownMenuEntry(value: 'CSE', label: 'CSE'),
+              DropdownMenuEntry(value: 'IT', label: 'IT'),
+              DropdownMenuEntry(value: 'AIML', label: 'AIML'),
+              DropdownMenuEntry(value: 'DS', label: 'DS'),
+              DropdownMenuEntry(value: 'ECE', label: 'ECE'),
+              DropdownMenuEntry(value: 'EEE', label: 'EEE'),
+            ],
+          ),
+          SizedBox(height: 10),
+
+          DropdownMenu(
+            width: 200,
+            label: Text('year'),
+            dropdownMenuEntries: [
+              DropdownMenuEntry(value: '1st', label: '1st Year'),
+              DropdownMenuEntry(value: '2nd', label: '2nd Year'),
+              DropdownMenuEntry(value: '3rd', label: '3rd Year'),
+              DropdownMenuEntry(value: '4th', label: '4th Year'),
+            ],
+          ),
+          SizedBox(height: 10),
+
+          DropdownMenu(
+            width: 200,
+            label: Text('semester'),
+            dropdownMenuEntries: [
+              DropdownMenuEntry(value: '1sem', label: '1st Semester'),
+              DropdownMenuEntry(value: '2sem', label: '2nd Semester'),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }
