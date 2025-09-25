@@ -3,26 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
 import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
+import 'deeper_subject_related_materials_page.dart';
 
 class SubjectRelatedMaterialsPage extends StatelessWidget {
-  // Helper to launch a URL
-  // void _launchUrl(BuildContext context, String? url) async {
-  //   if (url == null || url.isEmpty) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       const SnackBar(content: Text('No URL available for this material.')),
-  //     );
-  //     return;
-  //   }
-  //   final uri = Uri.tryParse(url);
-  //   if (uri != null && await canLaunchUrl(uri)) {
-  //     await launchUrl(uri, mode: LaunchMode.externalApplication);
-  //   } else {
-  //     ScaffoldMessenger.of(
-  //       context,
-  //     ).showSnackBar(const SnackBar(content: Text('Could not launch URL.')));
-  //   }
-  // }
-
   final String subjectName;
   final List<dynamic> allMaterials;
   const SubjectRelatedMaterialsPage({
@@ -74,63 +57,116 @@ class SubjectRelatedMaterialsPage extends StatelessWidget {
                 final type = uniqueTypes[index];
                 return InkWell(
                   onTap: () {
-                    final material = subjectMaterials.firstWhere(
-                      (item) => item['type'] == type,
-                      orElse: () => null,
-                    );
-                    final url = material != null ? material['url'] : null;
-                    if (url == null || url.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('No PDF available for this material.'),
+                    final typeStr = type?.toString().toLowerCase() ?? '';
+                    if (typeStr == 'notes') {
+                      final notesMaterials = subjectMaterials
+                          .where(
+                            (item) =>
+                                (item['type']?.toString().toLowerCase() ??
+                                    '') ==
+                                'notes',
+                          )
+                          .toList();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              DeeperSubjectRelatedMaterialsPage(
+                                subjectName: subjectName,
+                                materials: notesMaterials,
+                                labelKey: 'unit',
+                                cardLabelPrefix: 'Unit',
+                              ),
                         ),
                       );
-                      return;
-                    }
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Scaffold(
-                          appBar: AppBar(
-                            title: Text(type?.toString() ?? 'Material'),
-                            actions: [
-                              IconButton(
-                                icon: const Icon(Icons.download),
-                                onPressed: () async {
-                                  try {
-                                    final dir =
-                                        await getApplicationDocumentsDirectory();
-                                    final savePath =
-                                        '${dir.path}/${type?.toString() ?? 'material'}.pdf';
-                                    await Dio().download(url, savePath);
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          'Downloaded to $savePath',
-                                        ),
-                                      ),
-                                    );
-                                  } catch (e) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text('Download failed'),
-                                      ),
-                                    );
-                                  }
-                                },
+                    } else if (typeStr == 'pyq' ||
+                        typeStr == 'previous year' ||
+                        typeStr == 'previous year question paper') {
+                      final pyqMaterials = subjectMaterials
+                          .where(
+                            (item) =>
+                                (item['type']?.toString().toLowerCase() ??
+                                    '') ==
+                                typeStr,
+                          )
+                          .toList();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              DeeperSubjectRelatedMaterialsPage(
+                                subjectName: subjectName,
+                                materials: pyqMaterials,
+                                labelKey: 'pyq_year',
+                                cardLabelPrefix: 'Year',
                               ),
-                            ],
+                        ),
+                      );
+                    } else {
+                      final material = subjectMaterials.firstWhere(
+                        (item) => item['type'] == type,
+                        orElse: () => null,
+                      );
+                      final url = material != null ? material['url'] : null;
+                      if (url == null || url.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'No PDF available for this material.',
+                            ),
                           ),
-                          body: PDF().cachedFromUrl(
-                            url,
-                            placeholder: (progress) =>
-                                Center(child: Text('$progress %')),
-                            errorWidget: (error) =>
-                                Center(child: Text('Failed to load PDF')),
+                        );
+                        return;
+                      }
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Scaffold(
+                            appBar: AppBar(
+                              title: Text(type?.toString() ?? 'Material'),
+                              actions: [
+                                IconButton(
+                                  icon: const Icon(Icons.download),
+                                  onPressed: () async {
+                                    try {
+                                      final dir =
+                                          await getApplicationDocumentsDirectory();
+                                      final savePath =
+                                          '${dir.path}/${type?.toString() ?? 'material'}.pdf';
+                                      await Dio().download(url, savePath);
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            'Downloaded to $savePath',
+                                          ),
+                                        ),
+                                      );
+                                    } catch (e) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          content: Text('Download failed'),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                            body: PDF().cachedFromUrl(
+                              url,
+                              placeholder: (progress) =>
+                                  Center(child: Text('$progress %')),
+                              errorWidget: (error) =>
+                                  Center(child: Text('Failed to load PDF')),
+                            ),
                           ),
                         ),
-                      ),
-                    );
+                      );
+                    }
                   },
                   child: Card(
                     elevation: 2,
