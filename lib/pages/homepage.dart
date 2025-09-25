@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:vjitstudyvault/pages/subject_related_materials_page.dart';
+import 'package:dio/dio.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -28,14 +28,23 @@ class _HomepageState extends State<Homepage> {
   }
 
   Future<void> _loadMaterials() async {
-    final String jsonString = await rootBundle.loadString(
-      'assets/materials.json',
-    );
-    final Map<String, dynamic> jsonData = json.decode(jsonString);
-    setState(() {
-      _materials = jsonData['items'] ?? [];
-      _materialsLoaded = true;
-    });
+    try {
+      final response = await Dio().get(
+        'https://gist.githubusercontent.com/saiusesgithub/cfd9b4aea14e62eb0b35538059905354/raw/bea7df57f764b78065a1a5c020f1a9a5ba960cd4/materials.json',
+      );
+      final Map<String, dynamic> jsonData = json.decode(response.data);
+      setState(() {
+        _materials = jsonData['items'] ?? [];
+        _materialsLoaded = true;
+      });
+    } catch (e) {
+      setState(() {
+        _materialsLoaded = true;
+      });
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Failed to load materials: $e')));
+    }
   }
 
   Future<void> _loadPrefs() async {
