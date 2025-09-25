@@ -27,7 +27,9 @@ class _HomepageState extends State<Homepage> {
   }
 
   Future<void> _loadMaterials() async {
-    final String jsonString = await rootBundle.loadString('materials.json');
+    final String jsonString = await rootBundle.loadString(
+      'assets/materials.json',
+    );
     final Map<String, dynamic> jsonData = json.decode(jsonString);
     setState(() {
       _materials = jsonData['items'] ?? [];
@@ -72,9 +74,9 @@ class _HomepageState extends State<Homepage> {
         ),
         centerTitle: true,
       ),
-      body: Column(
+      body: ListView(
+        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 0),
         children: [
-          const SizedBox(height: 24),
           Text(
             'Materials Of '
             '${year != null ? year : 'Not set'} year '
@@ -88,50 +90,50 @@ class _HomepageState extends State<Homepage> {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  childAspectRatio: 1.2,
-                ),
-                itemCount: filteredMaterials.length,
-                itemBuilder: (context, index) {
-                  final item = filteredMaterials[index];
-                  return Card(
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            item['subject'] ?? '',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              fontFamily: 'Orbitron',
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            item['textbook_url']?.toString() ?? 'No textbook',
-                            style: const TextStyle(fontSize: 12),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+                childAspectRatio: 1.2,
               ),
+              itemCount: filteredMaterials.length,
+              itemBuilder: (context, index) {
+                final item = filteredMaterials[index];
+                return Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          item['subject'] ?? '',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            fontFamily: 'Orbitron',
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          item['textbook_url']?.toString() ?? 'No textbook',
+                          style: const TextStyle(fontSize: 12),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         ],
