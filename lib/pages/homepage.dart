@@ -79,11 +79,11 @@ class _HomepageState extends State<Homepage> {
         children: [
           Text(
             'Materials Of '
-            '${year != null ? year : 'Not set'} year '
-            '${semester != null ? semester : 'Not set'} sem of '
+            '${numberWithSuffix(year)} year '
+            '${numberWithSuffix(semester)} sem of '
             '${branch != null ? branch : 'Not set'} branch',
             style: const TextStyle(
-              fontSize: 20,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
               fontFamily: 'Orbitron',
             ),
@@ -125,7 +125,8 @@ class _HomepageState extends State<Homepage> {
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          item['textbook_url']?.toString() ?? 'No textbook',
+                          item['textbook_url']?.toString() ??
+                              'No textbook image available',
                           style: const TextStyle(fontSize: 12),
                           textAlign: TextAlign.center,
                         ),
@@ -159,5 +160,21 @@ class _HomepageState extends State<Homepage> {
         },
       ),
     );
+  }
+
+  String numberWithSuffix(int? year) {
+    if (year == null) return '';
+    switch (year) {
+      case 1:
+        return '1st';
+      case 2:
+        return '2nd';
+      case 3:
+        return '3rd';
+      case 4:
+        return '4th';
+      default:
+        return '$year';
+    }
   }
 }

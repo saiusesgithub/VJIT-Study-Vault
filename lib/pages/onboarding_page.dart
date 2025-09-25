@@ -13,6 +13,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
   int _currentPage = 0;
   SharedPreferences? prefs;
   bool _prefsLoaded = false;
+  String? selectedBranch;
+  int? selectedYear;
+  int? selectedSemester;
 
   @override
   void initState() {
@@ -39,6 +42,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
           if (_currentPage == 3) {
             return GestureDetector(
               onTap: () async {
+                await prefs!.setString('branch', selectedBranch ?? '');
+                await prefs!.setInt('year', selectedYear ?? 0);
+                await prefs!.setInt('semester', selectedSemester ?? 0);
                 await prefs!.setBool('onboardingComplete', true);
                 if (mounted) {
                   Navigator.pushReplacementNamed(context, 'home');
@@ -215,9 +221,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
           ),
           SizedBox(height: 60),
 
-          DropdownMenu(
+          DropdownMenu<String>(
+            onSelected: (value) => setState(() => selectedBranch = value),
             width: 200,
             label: Text('branch'),
+            initialSelection: selectedBranch,
             dropdownMenuEntries: [
               DropdownMenuEntry(value: 'CSE', label: 'CSE'),
               DropdownMenuEntry(value: 'IT', label: 'IT'),
@@ -229,24 +237,28 @@ class _OnboardingPageState extends State<OnboardingPage> {
           ),
           SizedBox(height: 10),
 
-          DropdownMenu(
+          DropdownMenu<int>(
+            onSelected: (value) => setState(() => selectedYear = value),
             width: 200,
             label: Text('year'),
+            initialSelection: selectedYear,
             dropdownMenuEntries: [
-              DropdownMenuEntry(value: '1st', label: '1st Year'),
-              DropdownMenuEntry(value: '2nd', label: '2nd Year'),
-              DropdownMenuEntry(value: '3rd', label: '3rd Year'),
-              DropdownMenuEntry(value: '4th', label: '4th Year'),
+              DropdownMenuEntry(value: 1, label: '1st Year'),
+              DropdownMenuEntry(value: 2, label: '2nd Year'),
+              DropdownMenuEntry(value: 3, label: '3rd Year'),
+              DropdownMenuEntry(value: 4, label: '4th Year'),
             ],
           ),
           SizedBox(height: 10),
 
-          DropdownMenu(
+          DropdownMenu<int>(
+            onSelected: (value) => setState(() => selectedSemester = value),
             width: 200,
             label: Text('semester'),
+            initialSelection: selectedSemester,
             dropdownMenuEntries: [
-              DropdownMenuEntry(value: '1sem', label: '1st Semester'),
-              DropdownMenuEntry(value: '2sem', label: '2nd Semester'),
+              DropdownMenuEntry(value: 1, label: '1st Semester'),
+              DropdownMenuEntry(value: 2, label: '2nd Semester'),
             ],
           ),
           SizedBox(height: 30),
