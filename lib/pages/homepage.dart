@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:vjitstudyvault/pages/subject_related_materials_page.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -104,33 +105,46 @@ class _HomepageState extends State<Homepage> {
               itemCount: filteredMaterials.length,
               itemBuilder: (context, index) {
                 final item = filteredMaterials[index];
-                return Card(
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          item['subject'] ?? '',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            fontFamily: 'Orbitron',
+                return InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SubjectRelatedMaterialsPage(
+                          subjectName: item['subject'],
+                          allMaterials: _materials,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            item['subject'] ?? '',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              fontFamily: 'Orbitron',
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          item['textbook_url']?.toString() ??
-                              'No textbook image available',
-                          style: const TextStyle(fontSize: 12),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
+                          const SizedBox(height: 10),
+                          Text(
+                            item['textbook_url']?.toString() ??
+                                'No textbook image available',
+                            style: const TextStyle(fontSize: 12),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );
