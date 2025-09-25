@@ -28,9 +28,17 @@ class _HomepageState extends State<Homepage> {
   }
 
   Future<void> _loadMaterials() async {
+    setState(() {
+      _materialsLoaded = false;
+    });
     try {
+      final url = 'https://gist.githubusercontent.com/saiusesgithub/cfd9b4aea14e62eb0b35538059905354/raw/8bd0efc779f1e7c2d4461636da1d282aec0298b7/materials.json?cb=${DateTime.now().millisecondsSinceEpoch}';
       final response = await Dio().get(
-        'https://gist.githubusercontent.com/saiusesgithub/cfd9b4aea14e62eb0b35538059905354/raw/bea7df57f764b78065a1a5c020f1a9a5ba960cd4/materials.json',
+        url,
+        options: Options(
+          responseType: ResponseType.plain,
+          headers: {"Cache-Control": "no-cache"},
+        ),
       );
       final Map<String, dynamic> jsonData = json.decode(response.data);
       setState(() {
@@ -41,9 +49,11 @@ class _HomepageState extends State<Homepage> {
       setState(() {
         _materialsLoaded = true;
       });
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Failed to load materials: $e')));
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to load materials: $e')));
+      }
     }
   }
 
@@ -62,12 +72,18 @@ class _HomepageState extends State<Homepage> {
     if (!_prefsLoaded || !_materialsLoaded) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
-    // Filter materials by selected year, semester, branch
-    final filteredMaterials = _materials.where((item) {
-      return item['year'] == year &&
+    // Filter materials by selected year, semester, branch, and unique subject
+    final filteredMaterials = <dynamic>[];
+    final seenSubjects = <String>{};
+    for (var item in _materials) {
+      if (item['year'] == year &&
           item['semester'] == semester &&
-          item['branch'] == branch;
-    }).toList();
+          item['branch'] == branch &&
+          !seenSubjects.contains(item['subject'])) {
+        filteredMaterials.add(item);
+        seenSubjects.add(item['subject']);
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -86,83 +102,98 @@ class _HomepageState extends State<Homepage> {
       ),
       body: RefreshIndicator(
         onRefresh: _loadMaterials,
-        child: ListView(
-          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 0),
-          children: [
-            Text(
-              'Materials Of '
-              '${numberWithSuffix(year)} year '
-              '${numberWithSuffix(semester)} sem of '
-              '${branch != null ? branch : 'Not set'} branch',
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Orbitron',
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  childAspectRatio: 1.2,
+        child: Builder(
+          builder: (context) {
+            if (!_materialsLoaded) {
+              return ListView(
+                children: const [
+                  SizedBox(
+                    height: 200,
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
+                ],
+              );
+            }
+            return ListView(
+              padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 0),
+              children: [
+                Text(
+                  'Materials Of '
+                  '${numberWithSuffix(year)} year '
+                  '${numberWithSuffix(semester)} sem of '
+                  '${branch != null ? branch : 'Not set'} branch',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Orbitron',
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                itemCount: filteredMaterials.length,
-                itemBuilder: (context, index) {
-                  final item = filteredMaterials[index];
-                  return InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SubjectRelatedMaterialsPage(
-                            subjectName: item['subject'],
-                            allMaterials: _materials,
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 12,
+                          mainAxisSpacing: 12,
+                          childAspectRatio: 1.2,
+                        ),
+                    itemCount: filteredMaterials.length,
+                    itemBuilder: (context, index) {
+                      final item = filteredMaterials[index];
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SubjectRelatedMaterialsPage(
+                                subjectName: item['subject'],
+                                allMaterials: _materials,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Card(
+                          elevation: 2,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  item['subject'] ?? '',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    fontFamily: 'Orbitron',
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: 10),
+                                Text(
+                                  item['textbook_url']?.toString() ??
+                                      'No textbook image available',
+                                  style: const TextStyle(fontSize: 12),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       );
                     },
-                    child: Card(
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              item['subject'] ?? '',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                fontFamily: 'Orbitron',
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            const SizedBox(height: 10),
-                            Text(
-                              item['textbook_url']?.toString() ??
-                                  'No textbook image available',
-                              style: const TextStyle(fontSize: 12),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(

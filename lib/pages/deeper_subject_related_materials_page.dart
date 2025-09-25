@@ -29,94 +29,102 @@ class DeeperSubjectRelatedMaterialsPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: Text('$subjectName $cardLabelPrefix Options')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 12,
-            childAspectRatio: 1.2,
-          ),
-          itemCount: labelValues.length,
-          itemBuilder: (context, idx) {
-            final labelValue = labelValues[idx];
-            return InkWell(
-              onTap: () {
-                final material = materials.firstWhere(
-                  (item) => item[labelKey] == labelValue,
-                  orElse: () => null,
-                );
-                final url = material != null ? material['url'] : null;
-                if (url == null || url.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('No PDF for $cardLabelPrefix $labelValue'),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          // No remote fetch here, so just pop and push to force parent reload
+          Navigator.of(context).pop();
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+              childAspectRatio: 1.2,
+            ),
+            itemCount: labelValues.length,
+            itemBuilder: (context, idx) {
+              final labelValue = labelValues[idx];
+              return InkWell(
+                onTap: () {
+                  final material = materials.firstWhere(
+                    (item) => item[labelKey] == labelValue,
+                    orElse: () => null,
+                  );
+                  final url = material != null ? material['url'] : null;
+                  if (url == null || url.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'No PDF for $cardLabelPrefix $labelValue',
+                        ),
+                      ),
+                    );
+                    return;
+                  }
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Scaffold(
+                        appBar: AppBar(
+                          title: Text('$cardLabelPrefix $labelValue'),
+                          actions: [
+                            IconButton(
+                              icon: const Icon(Icons.download),
+                              onPressed: () async {
+                                try {
+                                  final dir =
+                                      await getApplicationDocumentsDirectory();
+                                  final savePath =
+                                      '${dir.path}/$cardLabelPrefix$labelValue.pdf';
+                                  await Dio().download(url, savePath);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Downloaded to $savePath'),
+                                    ),
+                                  );
+                                } catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Download failed'),
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                        body: PDF().cachedFromUrl(
+                          url,
+                          placeholder: (progress) =>
+                              Center(child: Text('\u0000$progress %')),
+                          errorWidget: (error) =>
+                              Center(child: Text('Failed to load PDF')),
+                        ),
+                      ),
                     ),
                   );
-                  return;
-                }
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Scaffold(
-                      appBar: AppBar(
-                        title: Text('$cardLabelPrefix $labelValue'),
-                        actions: [
-                          IconButton(
-                            icon: const Icon(Icons.download),
-                            onPressed: () async {
-                              try {
-                                final dir =
-                                    await getApplicationDocumentsDirectory();
-                                final savePath =
-                                    '${dir.path}/$cardLabelPrefix$labelValue.pdf';
-                                await Dio().download(url, savePath);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text('Downloaded to $savePath'),
-                                  ),
-                                );
-                              } catch (e) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Download failed'),
-                                  ),
-                                );
-                              }
-                            },
-                          ),
-                        ],
+                },
+                child: Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Center(
+                    child: Text(
+                      '$cardLabelPrefix $labelValue',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Orbitron',
                       ),
-                      body: PDF().cachedFromUrl(
-                        url,
-                        placeholder: (progress) =>
-                            Center(child: Text('\u0000$progress %')),
-                        errorWidget: (error) =>
-                            Center(child: Text('Failed to load PDF')),
-                      ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
-                );
-              },
-              child: Card(
-                elevation: 2,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
                 ),
-                child: Center(
-                  child: Text(
-                    '$cardLabelPrefix $labelValue',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Orbitron',
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );
