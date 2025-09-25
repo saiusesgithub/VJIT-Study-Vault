@@ -1,22 +1,55 @@
 import 'package:flutter/material.dart';
+import 'package:vjitstudyvault/pages/homepage.dart';
 import 'package:vjitstudyvault/pages/onboarding_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  SharedPreferences? prefs;
+  bool _isLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initSharedPreferences();
+  }
+
+  Future<void> _initSharedPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isLoaded = true;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (!_isLoaded) {
+      return Center(child: CircularProgressIndicator());
+    }
+    final bool? onboardingComplete = prefs?.getBool('onboardingComplete');
     return MaterialApp(
       title: 'VJIT Study Vault',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
         fontFamily: 'Poppins',
       ),
-      home: const OnboardingPage(),
+      routes: {
+        'onboarding': (context) => const OnboardingPage(),
+        'home': (context) => const Homepage(),
+      },
+      home: onboardingComplete == true
+          ? const Homepage()
+          : const OnboardingPage(),
     );
   }
 }

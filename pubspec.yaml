@@ -30,7 +30,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  introduction_screen: ^4.0.0
   shared_preferences: ^2.5.3
   concentric_transition: ^1.0.3
 

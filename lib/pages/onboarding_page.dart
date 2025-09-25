@@ -1,5 +1,6 @@
 import 'package:concentric_transition/concentric_transition.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -9,19 +10,55 @@ class OnboardingPage extends StatefulWidget {
 }
 
 class _OnboardingPageState extends State<OnboardingPage> {
+  int _currentPage = 0;
+  SharedPreferences? prefs;
+  bool _prefsLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initSharedPreferences();
+  }
+
+  Future<void> _initSharedPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _prefsLoaded = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    int currentPageIndex = 0;
+    if (!_prefsLoaded) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
     List<Widget> pages = [pageZero(), pageOne(), pageTwo(), pageThree()];
     return Scaffold(
       body: ConcentricPageView(
-        nextButtonBuilder: (context) =>
-            Icon(Icons.arrow_forward, color: Colors.white),
+        nextButtonBuilder: (context) {
+          if (_currentPage == 3) {
+            return GestureDetector(
+              onTap: () async {
+                await prefs!.setBool('onboardingComplete', true);
+                if (mounted) {
+                  Navigator.pushReplacementNamed(context, 'home');
+                }
+              },
+              child: Icon(Icons.check, color: Colors.white),
+            );
+          }
+          return Icon(Icons.arrow_forward, color: Colors.white);
+        },
         colors: const <Color>[Colors.red, Colors.blue, Colors.red, Colors.blue],
         itemCount: 4,
         physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (int currentPageIndex) {
           return Center(child: pages[currentPageIndex]);
+        },
+        onChange: (int page) {
+          setState(() {
+            _currentPage = page;
+          });
         },
       ),
     );
@@ -212,6 +249,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
               DropdownMenuEntry(value: '2sem', label: '2nd Semester'),
             ],
           ),
+          SizedBox(height: 30),
         ],
       ),
     );
