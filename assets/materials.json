@@ -1,0 +1,76 @@
+{
+    "items": [
+        {
+            "branch": "IT",
+            "year": 2,
+            "semester": 1,
+            "subject": "DBMS",
+            "type": "QB",
+            "url": "https://example.com/IT/2/1/DBMS/QB.pdf",
+            "title": "DBMS QB",
+            "textbook_url": null,
+            "unit": null,
+            "pyq_year": null
+        },
+        {
+            "branch": "IT",
+            "year": 2,
+            "semester": 1,
+            "subject": "DS",
+            "type": "QB",
+            "url": "https://example.com/IT/2/1/DS/QB.pdf",
+            "title": "DS QB",
+            "textbook_url": null,
+            "unit": null,
+            "pyq_year": null
+        },
+        {
+            "branch": "IT",
+            "year": 2,
+            "semester": 1,
+            "subject": "MFCS",
+            "type": "QB",
+            "url": "https://example.com/IT/2/1/MFCS/QB.pdf",
+            "title": "MFCS QB",
+            "textbook_url": null,
+            "unit": null,
+            "pyq_year": null
+        },
+        {
+            "branch": "IT",
+            "year": 2,
+            "semester": 1,
+            "subject": "CSA",
+            "type": "QB",
+            "url": "https://example.com/IT/2/1/CSA/QB.pdf",
+            "title": "CSA QB",
+            "textbook_url": null,
+            "unit": null,
+            "pyq_year": null
+        },
+        {
+            "branch": "IT",
+            "year": 2,
+            "semester": 1,
+            "subject": "P&S",
+            "type": "QB",
+            "url": "https://example.com/IT/2/1/P&S/QB.pdf",
+            "title": "P&S QB",
+            "textbook_url": null,
+            "unit": null,
+            "pyq_year": null
+        },
+        {
+            "branch": "IT",
+            "year": 2,
+            "semester": 1,
+            "subject": "PC",
+            "type": "QB",
+            "url": "https://example.com/IT/2/1/PC/QB.pdf",
+            "title": "PC QB",
+            "textbook_url": null,
+            "unit": null,
+            "pyq_year": null
+        }
+    ]
+}
