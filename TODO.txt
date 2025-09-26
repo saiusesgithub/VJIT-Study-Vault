@@ -1,0 +1,16 @@
+app icon
+
+design/aesthetics all over the app
+textbook images
+
+fix settings page - 
+theme
+feedback/report bug
+contribute
+
+actually add content
+
+fix the blurry pdf
+fix path of downloading file
+
+fix the bug where user is able to continue without selecting any branch etc

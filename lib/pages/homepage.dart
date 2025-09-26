@@ -92,7 +92,7 @@ class _HomepageState extends State<Homepage> {
         body = const LabMaterialsPage();
         break;
       case 2:
-        body = const SettingsPage();
+        body = SettingsPage(loadMaterials: _loadMaterials);
         break;
       default:
         body = const SizedBox.shrink();

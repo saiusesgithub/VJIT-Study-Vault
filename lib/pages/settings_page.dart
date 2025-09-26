@@ -3,7 +3,8 @@ import 'package:ionicons/ionicons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key});
+  final Future<void> Function() loadMaterials;
+  const SettingsPage({super.key, required this.loadMaterials});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,7 @@ class SettingsPage extends StatelessWidget {
             children: [
               MaterialButton(
                 onPressed: () {
-                  // Implement check for new materials
+                  loadMaterials();
                 },
                 child: const Text('Check For New Materials'),
               ),
