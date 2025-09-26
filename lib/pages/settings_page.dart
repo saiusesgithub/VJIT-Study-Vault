@@ -35,6 +35,7 @@ class SettingsPage extends StatelessWidget {
               MaterialButton(
                 onPressed: () {
                   // Implement a feedback form here
+                  Navigator.pushNamed(context, '/feedback_report_bug');
                 },
                 child: const Text('Feedback / Report Bug'),
               ),
@@ -42,6 +43,7 @@ class SettingsPage extends StatelessWidget {
               MaterialButton(
                 onPressed: () {
                   // Implement contribute action here
+                  Navigator.pushNamed(context, '/contribute');
                 },
                 child: const Text('Contribute'),
               ),

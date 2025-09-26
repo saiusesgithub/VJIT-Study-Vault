@@ -3,10 +3,7 @@ textbook images
 
 fix settings page - 
 theme
-feedback/report bug
-contribute
 
 actually add content
 
 fix the blurry pdf
-fix path of downloading file

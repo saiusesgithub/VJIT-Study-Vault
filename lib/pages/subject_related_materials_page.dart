@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
 import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 import 'deeper_subject_related_materials_page.dart';
 
 class SubjectRelatedMaterialsPage extends StatelessWidget {
@@ -134,26 +135,51 @@ class SubjectRelatedMaterialsPage extends StatelessWidget {
                                     icon: const Icon(Icons.download),
                                     onPressed: () async {
                                       try {
-                                        final dir =
-                                            await getApplicationDocumentsDirectory();
-                                        final savePath =
-                                            '${dir.path}/${type?.toString() ?? 'material'}.pdf';
-                                        await Dio().download(url, savePath);
+                                        Directory? downloadsDir;
+                                        if (Platform.isAndroid) {
+                                          downloadsDir = Directory(
+                                            '/storage/emulated/0/Download',
+                                          );
+                                          if (!downloadsDir.existsSync()) {
+                                            // Fallback to external storage directory
+                                            downloadsDir =
+                                                await getExternalStorageDirectory();
+                                          }
+                                        } else {
+                                          // For iOS, use documents directory as downloads aren't accessible
+                                          downloadsDir =
+                                              await getApplicationDocumentsDirectory();
+                                        }
+
+                                        if (downloadsDir != null) {
+                                          final fileName =
+                                              '${subjectName}_${type?.toString() ?? 'material'}.pdf';
+                                          final savePath =
+                                              '${downloadsDir.path}/$fileName';
+
+                                          await Dio().download(url, savePath);
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                'Downloaded to Downloads/$fileName',
+                                              ),
+                                            ),
+                                          );
+                                        } else {
+                                          throw Exception(
+                                            'Could not access downloads directory',
+                                          );
+                                        }
+                                      } catch (e) {
                                         ScaffoldMessenger.of(
                                           context,
                                         ).showSnackBar(
                                           SnackBar(
                                             content: Text(
-                                              'Downloaded to $savePath',
+                                              'Download failed: ${e.toString()}',
                                             ),
-                                          ),
-                                        );
-                                      } catch (e) {
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
-                                          const SnackBar(
-                                            content: Text('Download failed'),
                                           ),
                                         );
                                       }
