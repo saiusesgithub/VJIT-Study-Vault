@@ -124,12 +124,13 @@ class SemMaterialsPage extends StatelessWidget {
                                 textAlign: TextAlign.center,
                               ),
                               const SizedBox(height: 10),
-                              Text(
-                                item['textbook_url']?.toString() ??
-                                    'No textbook image available',
-                                style: const TextStyle(fontSize: 12),
-                                textAlign: TextAlign.center,
-                              ),
+                              item['icon_url'] != null
+                                  ? Image(image: AssetImage(item['icon_url']))
+                                  : const Text(
+                                      'No icon available',
+                                      style: const TextStyle(fontSize: 12),
+                                      textAlign: TextAlign.center,
+                                    ),
                             ],
                           ),
                         ),

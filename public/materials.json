@@ -8,7 +8,7 @@
             "type": "QB",
             "url": "https://drive.google.com/uc?export=download&id=1HXn2fEuCSo_zBQhy_uCgnrXKs3JZsLyg",
             "title": "DBMS QB",
-            "textbook_url": null,
+            "icon_url": "https://img.icons8.com/ios-filled/100/database.png",
             "unit": null,
             "pyq_year": null
         },
@@ -20,7 +20,7 @@
             "type": "QB",
             "url": "https://drive.google.com/uc?export=download&id=1OarmEuC077fbLJX2mslIFKvGGQaScXa-",
             "title": "DS QB",
-            "textbook_url": null,
+            "icon_url": null,
             "unit": null,
             "pyq_year": null
         },
@@ -32,7 +32,7 @@
             "type": "QB",
             "url": "https://example.com/IT/2/1/MFCS/QB.pdf",
             "title": "MFCS QB",
-            "textbook_url": null,
+            "icon_url": null,
             "unit": null,
             "pyq_year": null
         },
@@ -44,7 +44,7 @@
             "type": "QB",
             "url": "https://example.com/IT/2/1/CSA/QB.pdf",
             "title": "CSA QB",
-            "textbook_url": null,
+            "icon_url": null,
             "unit": null,
             "pyq_year": null
         },
@@ -56,7 +56,7 @@
             "type": "QB",
             "url": "https://example.com/IT/2/1/P&S/QB.pdf",
             "title": "P&S QB",
-            "textbook_url": null,
+            "icon_url": null,
             "unit": null,
             "pyq_year": null
         },
@@ -68,7 +68,7 @@
             "type": "QB",
             "url": "https://example.com/IT/2/1/PC/QB.pdf",
             "title": "PC QB",
-            "textbook_url": null,
+            "icon_url": null,
             "unit": null,
             "pyq_year": null
         }

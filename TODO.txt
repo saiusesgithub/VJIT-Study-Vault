@@ -1,5 +1,4 @@
 design/aesthetics all over the app
-textbook images
 
 fix settings page - 
 theme
