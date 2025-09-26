@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vjitstudyvault/pages/lab_materials.dart';
+import 'package:vjitstudyvault/pages/settings_page.dart';
 import 'dart:convert';
 import 'package:vjitstudyvault/pages/subject_related_materials_page.dart';
 import 'package:dio/dio.dart';
@@ -32,7 +34,7 @@ class _HomepageState extends State<Homepage> {
       _materialsLoaded = false;
     });
     try {
-      final url = 'https://gist.githubusercontent.com/saiusesgithub/cfd9b4aea14e62eb0b35538059905354/raw/8bd0efc779f1e7c2d4461636da1d282aec0298b7/materials.json?cb=${DateTime.now().millisecondsSinceEpoch}';
+      final url = 'https://vjit-study-vault.web.app/materials.json';
       final response = await Dio().get(
         url,
         options: Options(
@@ -213,7 +215,19 @@ class _HomepageState extends State<Homepage> {
         ],
         currentIndex: 0,
         onTap: (int index) {
-          // TODO: handle navigation
+          if (index == 0) {
+            // Already on Homepage
+          } else if (index == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const LabMaterialsPage()),
+            );
+          } else if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const SettingsPage()),
+            );
+          }
         },
       ),
     );
