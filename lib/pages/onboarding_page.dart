@@ -40,17 +40,35 @@ class _OnboardingPageState extends State<OnboardingPage> {
       body: ConcentricPageView(
         nextButtonBuilder: (context) {
           if (_currentPage == 3) {
+            bool canProceed =
+                selectedBranch != null &&
+                selectedYear != null &&
+                selectedSemester != null;
             return GestureDetector(
-              onTap: () async {
-                await prefs!.setString('branch', selectedBranch ?? '');
-                await prefs!.setInt('year', selectedYear ?? 0);
-                await prefs!.setInt('semester', selectedSemester ?? 0);
-                await prefs!.setBool('onboardingComplete', true);
-                if (mounted) {
-                  Navigator.pushReplacementNamed(context, 'home');
-                }
-              },
-              child: Icon(Icons.check, color: Colors.white),
+              onTap: canProceed
+                  ? () async {
+                      await prefs!.setString('branch', selectedBranch!);
+                      await prefs!.setInt('year', selectedYear!);
+                      await prefs!.setInt('semester', selectedSemester!);
+                      await prefs!.setBool('onboardingComplete', true);
+                      if (mounted) {
+                        Navigator.pushReplacementNamed(context, 'home');
+                      }
+                    }
+                  : () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Please select your branch, year, and semester',
+                          ),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    },
+              child: Icon(
+                Icons.check,
+                color: canProceed ? Colors.white : Colors.grey,
+              ),
             );
           }
           return Icon(Icons.arrow_forward, color: Colors.white);
