@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vjitstudyvault/pages/lab_materials.dart';
+import 'package:vjitstudyvault/pages/sem_materials_page.dart';
 import 'package:vjitstudyvault/pages/settings_page.dart';
 import 'dart:convert';
-import 'package:vjitstudyvault/pages/subject_related_materials_page.dart';
 import 'package:dio/dio.dart';
 
 class Homepage extends StatefulWidget {
@@ -18,6 +18,8 @@ class _HomepageState extends State<Homepage> {
   int? semester;
   String? branch;
   bool _prefsLoaded = false;
+  int currentIndex = 0;
+  // Remove pages list, build with up-to-date data in build()
 
   List<dynamic> _materials = [];
   bool _materialsLoaded = false;
@@ -74,19 +76,27 @@ class _HomepageState extends State<Homepage> {
     if (!_prefsLoaded || !_materialsLoaded) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
-    // Filter materials by selected year, semester, branch, and unique subject
-    final filteredMaterials = <dynamic>[];
-    final seenSubjects = <String>{};
-    for (var item in _materials) {
-      if (item['year'] == year &&
-          item['semester'] == semester &&
-          item['branch'] == branch &&
-          !seenSubjects.contains(item['subject'])) {
-        filteredMaterials.add(item);
-        seenSubjects.add(item['subject']);
-      }
+    Widget body;
+    switch (currentIndex) {
+      case 0:
+        body = SemMaterialsPage(
+          year: year,
+          semester: semester,
+          branch: branch,
+          materials: _materials,
+          materialsLoaded: _materialsLoaded,
+          loadMaterials: _loadMaterials,
+        );
+        break;
+      case 1:
+        body = const LabMaterialsPage();
+        break;
+      case 2:
+        body = const SettingsPage();
+        break;
+      default:
+        body = const SizedBox.shrink();
     }
-
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -102,102 +112,7 @@ class _HomepageState extends State<Homepage> {
         ),
         centerTitle: true,
       ),
-      body: RefreshIndicator(
-        onRefresh: _loadMaterials,
-        child: Builder(
-          builder: (context) {
-            if (!_materialsLoaded) {
-              return ListView(
-                children: const [
-                  SizedBox(
-                    height: 200,
-                    child: Center(child: CircularProgressIndicator()),
-                  ),
-                ],
-              );
-            }
-            return ListView(
-              padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 0),
-              children: [
-                Text(
-                  'Materials Of '
-                  '${numberWithSuffix(year)} year '
-                  '${numberWithSuffix(semester)} sem of '
-                  '${branch != null ? branch : 'Not set'} branch',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Orbitron',
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 12,
-                          mainAxisSpacing: 12,
-                          childAspectRatio: 1.2,
-                        ),
-                    itemCount: filteredMaterials.length,
-                    itemBuilder: (context, index) {
-                      final item = filteredMaterials[index];
-                      return InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SubjectRelatedMaterialsPage(
-                                subjectName: item['subject'],
-                                allMaterials: _materials,
-                              ),
-                            ),
-                          );
-                        },
-                        child: Card(
-                          elevation: 2,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  item['subject'] ?? '',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                    fontFamily: 'Orbitron',
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                                const SizedBox(height: 10),
-                                Text(
-                                  item['textbook_url']?.toString() ??
-                                      'No textbook image available',
-                                  style: const TextStyle(fontSize: 12),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            );
-          },
-        ),
-      ),
+      body: body,
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(
@@ -213,21 +128,11 @@ class _HomepageState extends State<Homepage> {
             label: 'Settings',
           ),
         ],
-        currentIndex: 0,
+        currentIndex: currentIndex,
         onTap: (int index) {
-          if (index == 0) {
-            // Already on Homepage
-          } else if (index == 1) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const LabMaterialsPage()),
-            );
-          } else if (index == 2) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const SettingsPage()),
-            );
-          }
+          setState(() {
+            currentIndex = index;
+          });
         },
       ),
     );
