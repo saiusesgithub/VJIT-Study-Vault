@@ -1,8 +1,5 @@
 design/aesthetics all over the app
 
-fix settings page - 
-theme
-
 actually add content
 
 while displaying a pdf , show a slider on the right edge (with page no's) 

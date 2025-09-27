@@ -104,13 +104,20 @@ class SettingsPage extends StatelessWidget {
 
                 const SizedBox(height: 16),
 
-                // Branch/Year/Semester display and change
-                _BranchYearSemRow(),
+                // Branch/Year/Semester edit button
+                const SizedBox(height: 12),
 
                 // Bottom: action buttons
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    ElevatedButton(
+                      onPressed: () => _showChangeDialog(context),
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size.fromHeight(48),
+                      ),
+                      child: const Text('Edit Branch / Year / Semester'),
+                    ),
                     ElevatedButton(
                       onPressed: () {
                         loadMaterials();
@@ -149,6 +156,109 @@ class SettingsPage extends StatelessWidget {
       ),
     );
   }
+
+  void _showChangeDialog(BuildContext context) async {
+    String? newBranch;
+    int? newYear;
+    int? newSemester;
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: const Text('Change Branch / Year / Semester'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  DropdownButtonFormField<String>(
+                    value: newBranch,
+                    items: ['CSE', 'IT', 'ECE', 'EEE', 'MECH', 'CIVIL']
+                        .map((b) => DropdownMenuItem(value: b, child: Text(b)))
+                        .toList(),
+                    onChanged: (v) => setDialogState(() => newBranch = v),
+                    decoration: const InputDecoration(
+                      labelText: 'Branch',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  DropdownButtonFormField<int>(
+                    value: newYear,
+                    items: [1, 2, 3, 4]
+                        .map(
+                          (y) => DropdownMenuItem(
+                            value: y,
+                            child: Text('Year $y'),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (v) => setDialogState(() => newYear = v),
+                    decoration: const InputDecoration(
+                      labelText: 'Year',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  DropdownButtonFormField<int>(
+                    value: newSemester,
+                    items: [1, 2]
+                        .map(
+                          (s) => DropdownMenuItem(
+                            value: s,
+                            child: Text('Semester $s'),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (v) => setDialogState(() => newSemester = v),
+                    decoration: const InputDecoration(
+                      labelText: 'Semester',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel'),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    final prefs = await SharedPreferences.getInstance();
+                    if (newBranch != null &&
+                        newYear != null &&
+                        newSemester != null) {
+                      await prefs.setString('branch', newBranch!);
+                      await prefs.setInt('year', newYear!);
+                      await prefs.setInt('semester', newSemester!);
+                      Navigator.pop(context);
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text('Restart Required'),
+                          content: const Text(
+                            'Please restart the app to apply the changes.',
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text('OK'),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                  },
+                  child: const Text('Save'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
 }
 
 // change branch / year / semester
@@ -179,101 +289,155 @@ class _BranchYearSemRowState extends State<_BranchYearSemRow> {
     });
   }
 
-  void _showChangeDialog() async {
-    String? newBranch = branch;
-    int? newYear = year;
-    int? newSemester = semester;
-    await showDialog(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setDialogState) {
-            return AlertDialog(
-              title: const Text('Change Branch / Year / Semester'),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  DropdownButton<String>(
-                    value: newBranch,
-                    items: ['CSE', 'IT', 'ECE', 'EEE', 'MECH', 'CIVIL']
-                        .map((b) => DropdownMenuItem(value: b, child: Text(b)))
-                        .toList(),
-                    onChanged: (v) => setDialogState(() => newBranch = v),
-                    hint: const Text('Branch'),
-                  ),
-                  DropdownButton<int>(
-                    value: newYear,
-                    items: [1, 2, 3, 4]
-                        .map(
-                          (y) => DropdownMenuItem(
-                            value: y,
-                            child: Text('Year $y'),
-                          ),
-                        )
-                        .toList(),
-                    onChanged: (v) => setDialogState(() => newYear = v),
-                    hint: const Text('Year'),
-                  ),
-                  DropdownButton<int>(
-                    value: newSemester,
-                    items: [1, 2]
-                        .map(
-                          (s) =>
-                              DropdownMenuItem(value: s, child: Text('Sem $s')),
-                        )
-                        .toList(),
-                    onChanged: (v) => setDialogState(() => newSemester = v),
-                    hint: const Text('Semester'),
-                  ),
-                ],
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('Cancel'),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    final prefs = await SharedPreferences.getInstance();
-                    if (newBranch != null &&
-                        newYear != null &&
-                        newSemester != null) {
-                      await prefs.setString('branch', newBranch!);
-                      await prefs.setInt('year', newYear!);
-                      await prefs.setInt('semester', newSemester!);
-                      setState(() {
-                        branch = newBranch;
-                        year = newYear;
-                        semester = newSemester;
-                      });
-                      Navigator.pop(context);
-                    }
-                  },
-                  child: const Text('Save'),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     if (loading) return const SizedBox.shrink();
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Branch: $branch, Year: ${year ?? '-'}, Sem: ${semester ?? '-'}',
+          Card(
+            elevation: 2,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Current Selection',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Branch: $branch\nYear: ${year ?? '-'}\nSemester: ${semester ?? '-'}',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ],
+              ),
+            ),
           ),
-          const SizedBox(width: 12),
-          OutlinedButton(
-            onPressed: _showChangeDialog,
-            child: const Text('Change'),
+          const SizedBox(height: 12),
+          Center(
+            child: OutlinedButton(
+              onPressed: () {
+                // Trigger the dialog from here
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return StatefulBuilder(
+                      builder: (context, setDialogState) {
+                        return AlertDialog(
+                          title: const Text('Change Branch / Year / Semester'),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              DropdownButtonFormField<String>(
+                                value: branch,
+                                items:
+                                    ['CSE', 'IT', 'ECE', 'EEE', 'MECH', 'CIVIL']
+                                        .map(
+                                          (b) => DropdownMenuItem(
+                                            value: b,
+                                            child: Text(b),
+                                          ),
+                                        )
+                                        .toList(),
+                                onChanged: (v) =>
+                                    setDialogState(() => branch = v),
+                                decoration: const InputDecoration(
+                                  labelText: 'Branch',
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              DropdownButtonFormField<int>(
+                                value: year,
+                                items: [1, 2, 3, 4]
+                                    .map(
+                                      (y) => DropdownMenuItem(
+                                        value: y,
+                                        child: Text('Year $y'),
+                                      ),
+                                    )
+                                    .toList(),
+                                onChanged: (v) =>
+                                    setDialogState(() => year = v),
+                                decoration: const InputDecoration(
+                                  labelText: 'Year',
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              DropdownButtonFormField<int>(
+                                value: semester,
+                                items: [1, 2]
+                                    .map(
+                                      (s) => DropdownMenuItem(
+                                        value: s,
+                                        child: Text('Semester $s'),
+                                      ),
+                                    )
+                                    .toList(),
+                                onChanged: (v) =>
+                                    setDialogState(() => semester = v),
+                                decoration: const InputDecoration(
+                                  labelText: 'Semester',
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
+                            ],
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text('Cancel'),
+                            ),
+                            ElevatedButton(
+                              onPressed: () async {
+                                final prefs =
+                                    await SharedPreferences.getInstance();
+                                if (branch != null &&
+                                    year != null &&
+                                    semester != null) {
+                                  await prefs.setString('branch', branch!);
+                                  await prefs.setInt('year', year!);
+                                  await prefs.setInt('semester', semester!);
+                                  Navigator.pop(context);
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: const Text('Restart Required'),
+                                      content: const Text(
+                                        'Please restart the app to apply the changes.',
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context),
+                                          child: const Text('OK'),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
+                              },
+                              child: const Text('Save'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+              child: const Text('Edit'),
+            ),
           ),
         ],
       ),
