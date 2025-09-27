@@ -101,13 +101,16 @@ class _OnboardingPageState extends State<OnboardingPage> {
             child: Image.asset('assets/logos/vjit_logo.png'),
           ),
           SizedBox(height: 10),
-          Text(
-            'Welcome to VJIT Study Vault',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              fontFamily: 'Orbitron',
+          Center(
+            child: Text(
+              'Welcome to \nVJIT Study Vault',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                fontFamily: 'Orbitron',
+              ),
             ),
           ),
           SizedBox(height: 50),
@@ -116,10 +119,6 @@ class _OnboardingPageState extends State<OnboardingPage> {
             style: TextStyle(color: Colors.white, fontFamily: 'Orbitron'),
           ),
           SizedBox(height: 20),
-          Text(
-            'By students, for students',
-            style: TextStyle(color: Colors.white, fontFamily: 'Orbitron'),
-          ),
         ],
       ),
     );
@@ -132,7 +131,12 @@ class _OnboardingPageState extends State<OnboardingPage> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text('IMAGE', style: TextStyle(fontFamily: 'Orbitron')),
+          // replaced IMAGE placeholder with icon
+          CircleAvatar(
+            radius: 28,
+            backgroundColor: Colors.white24,
+            child: Icon(Icons.file_present, size: 28, color: Colors.white),
+          ),
 
           Text(
             'Everything in one place',
@@ -178,7 +182,12 @@ class _OnboardingPageState extends State<OnboardingPage> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text('IMAGE', style: TextStyle(fontFamily: 'Orbitron')),
+        // replaced IMAGE placeholder with icon
+        CircleAvatar(
+          radius: 28,
+          backgroundColor: Colors.white24,
+          child: Icon(Icons.person, size: 28, color: Colors.white),
+        ),
 
         Text(
           'Simple And Personal',

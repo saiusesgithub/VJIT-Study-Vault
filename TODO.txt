@@ -5,4 +5,10 @@ theme
 
 actually add content
 
-fix the blurry pdf
+while displaying a pdf , show a slider on the right edge (with page no's) 
+make the sensitivity of sliding a little more , its too slow to scroll rn
+
+search button (to find words inside a pdf)
+ability to copy text from a pdf
+
+dark mode
