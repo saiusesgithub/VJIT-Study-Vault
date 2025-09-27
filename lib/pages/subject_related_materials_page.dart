@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 // import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
+import 'package:pdfx/pdfx.dart';
 import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
@@ -127,73 +127,10 @@ class SubjectRelatedMaterialsPage extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => Scaffold(
-                              appBar: AppBar(
-                                title: Text(type?.toString() ?? 'Material'),
-                                actions: [
-                                  IconButton(
-                                    icon: const Icon(Icons.download),
-                                    onPressed: () async {
-                                      try {
-                                        Directory? downloadsDir;
-                                        if (Platform.isAndroid) {
-                                          downloadsDir = Directory(
-                                            '/storage/emulated/0/Download',
-                                          );
-                                          if (!downloadsDir.existsSync()) {
-                                            // Fallback to external storage directory
-                                            downloadsDir =
-                                                await getExternalStorageDirectory();
-                                          }
-                                        } else {
-                                          // For iOS, use documents directory as downloads aren't accessible
-                                          downloadsDir =
-                                              await getApplicationDocumentsDirectory();
-                                        }
-
-                                        if (downloadsDir != null) {
-                                          final fileName =
-                                              '${subjectName}_${type?.toString() ?? 'material'}.pdf';
-                                          final savePath =
-                                              '${downloadsDir.path}/$fileName';
-
-                                          await Dio().download(url, savePath);
-                                          ScaffoldMessenger.of(
-                                            context,
-                                          ).showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                'Downloaded to Downloads/$fileName',
-                                              ),
-                                            ),
-                                          );
-                                        } else {
-                                          throw Exception(
-                                            'Could not access downloads directory',
-                                          );
-                                        }
-                                      } catch (e) {
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              'Download failed: ${e.toString()}',
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    },
-                                  ),
-                                ],
-                              ),
-                              body: PDF().cachedFromUrl(
-                                url,
-                                placeholder: (progress) =>
-                                    Center(child: Text('$progress %')),
-                                errorWidget: (error) =>
-                                    Center(child: Text('Failed to load PDF')),
-                              ),
+                            builder: (context) => PdfViewerPage(
+                              url: url,
+                              title: type?.toString() ?? 'Material',
+                              subjectName: subjectName,
                             ),
                           ),
                         );
@@ -223,5 +160,148 @@ class SubjectRelatedMaterialsPage extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class PdfViewerPage extends StatefulWidget {
+  final String url;
+  final String title;
+  final String subjectName;
+
+  const PdfViewerPage({
+    super.key,
+    required this.url,
+    required this.title,
+    required this.subjectName,
+  });
+
+  @override
+  State<PdfViewerPage> createState() => _PdfViewerPageState();
+}
+
+class _PdfViewerPageState extends State<PdfViewerPage> {
+  late PdfControllerPinch pdfController;
+  bool isLoading = true;
+  String? errorMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializePdf();
+  }
+
+  Future<void> _initializePdf() async {
+    try {
+      setState(() {
+        isLoading = true;
+        errorMessage = null;
+      });
+
+      pdfController = PdfControllerPinch(
+        document: PdfDocument.openData(
+          Dio()
+              .get(
+                widget.url,
+                options: Options(responseType: ResponseType.bytes),
+              )
+              .then((response) => response.data),
+        ),
+      );
+
+      setState(() {
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+        errorMessage = 'Failed to load PDF: ${e.toString()}';
+      });
+    }
+  }
+
+  Future<void> _downloadPdf() async {
+    try {
+      Directory? downloadsDir;
+      if (Platform.isAndroid) {
+        downloadsDir = Directory('/storage/emulated/0/Download');
+        if (!downloadsDir.existsSync()) {
+          downloadsDir = await getExternalStorageDirectory();
+        }
+      } else {
+        downloadsDir = await getApplicationDocumentsDirectory();
+      }
+
+      if (downloadsDir != null) {
+        final fileName = '${widget.subjectName}_${widget.title}.pdf';
+        final savePath = '${downloadsDir.path}/$fileName';
+
+        await Dio().download(widget.url, savePath);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Downloaded to Downloads/$fileName'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+      } else {
+        throw Exception('Could not access downloads directory');
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Download failed: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+        actions: [
+          IconButton(icon: const Icon(Icons.download), onPressed: _downloadPdf),
+        ],
+      ),
+      body: isLoading
+          ? const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 16),
+                  Text('Loading PDF...'),
+                ],
+              ),
+            )
+          : errorMessage != null
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error, size: 64, color: Colors.red),
+                  const SizedBox(height: 16),
+                  Text(errorMessage!),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: _initializePdf,
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ),
+            )
+          : PdfViewPinch(controller: pdfController),
+    );
+  }
+
+  @override
+  void dispose() {
+    pdfController.dispose();
+    super.dispose();
   }
 }

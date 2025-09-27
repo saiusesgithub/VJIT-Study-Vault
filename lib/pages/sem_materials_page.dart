@@ -124,12 +124,25 @@ class SemMaterialsPage extends StatelessWidget {
                                 textAlign: TextAlign.center,
                               ),
                               const SizedBox(height: 10),
-                              item['icon_url'] != null
-                                  ? Image(image: NetworkImage(item['icon_url']))
-                                  : const Text(
-                                      'No icon available',
-                                      style: const TextStyle(fontSize: 12),
-                                      textAlign: TextAlign.center,
+                              item['textbook_url'] != null
+                                  ? Image.network(
+                                      item['textbook_url'],
+                                      height: 40,
+                                      width: 40,
+                                      fit: BoxFit.contain,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                            return const Icon(
+                                              Icons.book,
+                                              size: 40,
+                                              color: Colors.grey,
+                                            );
+                                          },
+                                    )
+                                  : const Icon(
+                                      Icons.book,
+                                      size: 40,
+                                      color: Colors.grey,
                                     ),
                             ],
                           ),

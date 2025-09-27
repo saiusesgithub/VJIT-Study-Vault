@@ -33,7 +33,7 @@ dependencies:
   shared_preferences: ^2.5.3
   concentric_transition: ^1.0.3
   url_launcher: ^6.2.5
-  flutter_cached_pdfview: ^0.4.2
+  pdfx: ^2.6.0
   dio: ^5.0.0
   path_provider: ^2.0.0
   ionicons: ^0.2.2
