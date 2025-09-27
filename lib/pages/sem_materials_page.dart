@@ -68,7 +68,7 @@ class SemMaterialsPage extends StatelessWidget {
               Text(
                 'Materials Of '
                 '${numberWithSuffix(year)} year '
-                '${numberWithSuffix(semester)} sem of '
+                '${numberWithSuffix(semester)} sem \nof '
                 '${branch ?? 'Not set'} branch',
                 style: const TextStyle(
                   fontSize: 16,

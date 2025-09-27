@@ -111,13 +111,14 @@ class SettingsPage extends StatelessWidget {
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    ElevatedButton(
+                    OutlinedButton(
                       onPressed: () => _showChangeDialog(context),
-                      style: ElevatedButton.styleFrom(
+                      style: OutlinedButton.styleFrom(
                         minimumSize: const Size.fromHeight(48),
                       ),
                       child: const Text('Edit Branch / Year / Semester'),
                     ),
+                    const SizedBox(height: 12),
                     ElevatedButton(
                       onPressed: () {
                         loadMaterials();
@@ -138,11 +139,11 @@ class SettingsPage extends StatelessWidget {
                       child: const Text('Feedback / Report Bug'),
                     ),
                     const SizedBox(height: 12),
-                    OutlinedButton(
+                    ElevatedButton(
                       onPressed: () {
                         Navigator.pushNamed(context, '/contribute');
                       },
-                      style: OutlinedButton.styleFrom(
+                      style: ElevatedButton.styleFrom(
                         minimumSize: const Size.fromHeight(48),
                       ),
                       child: const Text('Contribute'),
