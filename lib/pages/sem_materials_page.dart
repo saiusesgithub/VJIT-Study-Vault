@@ -125,7 +125,7 @@ class SemMaterialsPage extends StatelessWidget {
                               ),
                               const SizedBox(height: 10),
                               item['icon_url'] != null
-                                  ? Image(image: AssetImage(item['icon_url']))
+                                  ? Image(image: NetworkImage(item['icon_url']))
                                   : const Text(
                                       'No icon available',
                                       style: const TextStyle(fontSize: 12),
