@@ -1,15 +1,15 @@
 Urgent Todo's - 
-- contribution page (feature names of ppl who have contributed)
 - Test on multiple devices and screen sizes.
-- simple transitions
 - fix inconsistency in text etc
 - actually add content 
 - ios builds
 - take hod's permission and launch this publicly
+- readme and hosting on github and sharing it with firebase app distribution
 
 Future Improvements - 
 - google ads
 - dark mode
+- better organization of json / using actual database like supabase/firestore/mongodb
 
 - search button (to find words inside a pdf)
 - ability to copy text from a pdf
