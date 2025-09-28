@@ -176,7 +176,7 @@ class SettingsPage extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   DropdownButtonFormField<String>(
-                    value: newBranch,
+                    initialValue: newBranch,
                     items: ['CSE', 'IT', 'ECE', 'EEE', 'MECH', 'CIVIL']
                         .map((b) => DropdownMenuItem(value: b, child: Text(b)))
                         .toList(),
@@ -188,7 +188,7 @@ class SettingsPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   DropdownButtonFormField<int>(
-                    value: newYear,
+                    initialValue: newYear,
                     items: [1, 2, 3, 4]
                         .map(
                           (y) => DropdownMenuItem(
@@ -205,7 +205,7 @@ class SettingsPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   DropdownButtonFormField<int>(
-                    value: newSemester,
+                    initialValue: newSemester,
                     items: [1, 2]
                         .map(
                           (s) => DropdownMenuItem(
@@ -342,7 +342,7 @@ class _BranchYearSemRowState extends State<_BranchYearSemRow> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               DropdownButtonFormField<String>(
-                                value: branch,
+                                initialValue: branch,
                                 items:
                                     ['CSE', 'IT', 'ECE', 'EEE', 'MECH', 'CIVIL']
                                         .map(
@@ -361,7 +361,7 @@ class _BranchYearSemRowState extends State<_BranchYearSemRow> {
                               ),
                               const SizedBox(height: 12),
                               DropdownButtonFormField<int>(
-                                value: year,
+                                initialValue: year,
                                 items: [1, 2, 3, 4]
                                     .map(
                                       (y) => DropdownMenuItem(
@@ -379,7 +379,7 @@ class _BranchYearSemRowState extends State<_BranchYearSemRow> {
                               ),
                               const SizedBox(height: 12),
                               DropdownButtonFormField<int>(
-                                value: semester,
+                                initialValue: semester,
                                 items: [1, 2]
                                     .map(
                                       (s) => DropdownMenuItem(

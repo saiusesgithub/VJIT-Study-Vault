@@ -6,7 +6,7 @@ class AppTheme {
     colorScheme: ColorScheme.light(
       primary: Color(0xFF0D47A1),
       secondary: Color(0xFFD32F2F),
-      background: Color(0xFFF5F5F5),
+      surface: Color(0xFFF5F5F5),
     ),
     scaffoldBackgroundColor: Color(0xFFF5F5F5),
     textTheme: TextTheme(bodyMedium: TextStyle(color: Color(0xFF212121))),

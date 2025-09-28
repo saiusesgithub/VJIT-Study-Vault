@@ -1,20 +1,19 @@
 Urgent Todo's - 
-- actually add content
 - contribution page (feature names of ppl who have contributed)
 - Test on multiple devices and screen sizes.
 - simple transitions
-
-
+- fix inconsistency in text etc
+- actually add content 
+- ios builds
+- take hod's permission and launch this publicly
 
 Future Improvements - 
 - google ads
 - dark mode
-- ios builds
+
 - search button (to find words inside a pdf)
 - ability to copy text from a pdf
 - smooth scrolling (increase sensitivity), page no slider at right
-
-
 
 
 Use high-quality icons (e.g., Material Icons, Ionicons, or custom SVGs).

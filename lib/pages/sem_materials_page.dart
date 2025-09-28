@@ -66,13 +66,13 @@ class SemMaterialsPage extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: Center(
-                child: const SizedBox(
-                  height: 200,
-                  child: Text(
-                    'No materials available yet for the selected year, semester, and branch.',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
+                child: Text(
+                  'No materials available yet for the selected : ${numberWithSuffix(year)} year, ${numberWithSuffix(semester)} semester, and $branch branch.',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
                   ),
+                  textAlign: TextAlign.center,
                 ),
               ),
             );

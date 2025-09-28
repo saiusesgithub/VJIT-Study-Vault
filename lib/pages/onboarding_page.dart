@@ -121,7 +121,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             ),
                             const SizedBox(height: 24),
                             DropdownButtonFormField<String>(
-                              value: selectedBranch,
+                              initialValue: selectedBranch,
                               onChanged: (value) =>
                                   setState(() => selectedBranch = value),
                               decoration: const InputDecoration(
@@ -157,7 +157,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             ),
                             const SizedBox(height: 16),
                             DropdownButtonFormField<int>(
-                              value: selectedYear,
+                              initialValue: selectedYear,
                               onChanged: (value) =>
                                   setState(() => selectedYear = value),
                               decoration: const InputDecoration(
@@ -185,7 +185,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             ),
                             const SizedBox(height: 16),
                             DropdownButtonFormField<int>(
-                              value: selectedSemester,
+                              initialValue: selectedSemester,
                               onChanged: (value) =>
                                   setState(() => selectedSemester = value),
                               decoration: const InputDecoration(
