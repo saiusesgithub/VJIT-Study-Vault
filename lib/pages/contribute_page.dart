@@ -57,12 +57,7 @@ class _ContributePageState extends State<ContributePage> {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            const Text(
-              'You can contribute by sharing your PDFs or Google Drive links with us. Your contributions will help countless students. Contact us via WhatsApp:',
-              style: TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 16),
-            Row(
+            Column(
               children: [
                 GestureDetector(
                   onTap: () {
@@ -75,10 +70,10 @@ class _ContributePageState extends State<ContributePage> {
                   },
                   child: const Icon(Ionicons.logo_whatsapp),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(height: 8),
                 const Expanded(
                   child: Text(
-                    'Contribute your PDFs or Google Drive links via WhatsApp. Your name will be featured here forever, visible to countless students!',
+                    'Contribute your PDFs or Google Drive links via WhatsApp. Your contributions will help countless students. Your name will be featured here forever, visible to countless students!',
                     style: TextStyle(fontSize: 16),
                   ),
                 ),

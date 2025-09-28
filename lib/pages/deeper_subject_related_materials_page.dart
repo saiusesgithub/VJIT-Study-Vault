@@ -21,7 +21,12 @@ class DeeperSubjectRelatedMaterialsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('$subjectName $cardLabelPrefix Options')),
+      appBar: AppBar(
+        title: Text(
+          '$subjectName $cardLabelPrefix Options',
+          style: const TextStyle(fontFamily: 'Orbitron'),
+        ),
+      ),
       body: RefreshIndicator(
         onRefresh: () async {
           // No remote fetch here, so just pop and push to force parent reload
@@ -108,16 +113,15 @@ class PdfViewerPage extends StatefulWidget {
 }
 
 class _PdfViewerPageState extends State<PdfViewerPage> {
-  late PdfControllerPinch pdfController;
+  PdfControllerPinch? pdfController;
   bool isLoading = true;
   String? errorMessage;
-  late int totalPages;
-  late int currentPage;
+  int totalPages = 0;
+  int currentPage = 1;
 
   @override
   void initState() {
     super.initState();
-    currentPage = 1;
     _initializePdf();
   }
 
@@ -140,11 +144,11 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
         viewportFraction: 0.8, // Increased scroll sensitivity
       );
 
-      pdfController.addListener(() {
+      pdfController?.addListener(() {
         setState(() {
-          currentPage = pdfController.page.round();
+          currentPage = pdfController?.page.round() ?? 1;
           // Fixed type issue by ensuring `totalPages` is non-null.
-          totalPages = pdfController.pagesCount ?? 0;
+          totalPages = pdfController?.pagesCount ?? 0;
         });
       });
 
@@ -213,7 +217,10 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(
+          widget.title,
+          style: const TextStyle(fontFamily: 'Orbitron'),
+        ),
         actions: [
           IconButton(icon: const Icon(Icons.download), onPressed: _downloadPdf),
         ],
@@ -238,21 +245,29 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
                     style: const TextStyle(color: Colors.red),
                   ),
                 )
-              : PdfViewPinch(controller: pdfController),
+              : Scrollbar(
+                  thumbVisibility: true,
+                  interactive: true,
+                  thickness: 8,
+                  radius: const Radius.circular(6),
+                  child: PdfViewPinch(controller: pdfController!),
+                ),
           if (!isLoading && errorMessage == null)
-            Align(
-              alignment: Alignment.centerRight,
-              child: RotatedBox(
-                quarterTurns: 1,
-                child: Slider(
-                  value: currentPage.toDouble(),
-                  min: 1,
-                  max: totalPages.toDouble(),
-                  divisions: totalPages,
-                  label: 'Page $currentPage',
-                  onChanged: (value) {
-                    pdfController.jumpToPage(value.toInt());
-                  },
+            Positioned(
+              right: 12,
+              bottom: 12,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.black54,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  '$currentPage / ${totalPages == 0 ? '?' : totalPages}',
+                  style: const TextStyle(color: Colors.white, fontSize: 12),
                 ),
               ),
             ),
@@ -263,7 +278,7 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
 
   @override
   void dispose() {
-    pdfController.dispose();
+    pdfController?.dispose();
     super.dispose();
   }
 }

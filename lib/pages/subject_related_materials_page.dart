@@ -151,7 +151,8 @@ class SubjectRelatedMaterialsPage extends StatelessWidget {
                             fontFamily: 'Orbitron',
                           ),
                           textAlign: TextAlign.center,
-                          overflow: TextOverflow.ellipsis, // Added to handle long text
+                          overflow: TextOverflow
+                              .ellipsis, // Added to handle long text
                           maxLines: 2, // Limits the text to 2 lines
                         ),
                       ),
@@ -184,9 +185,11 @@ class PdfViewerPage extends StatefulWidget {
 }
 
 class _PdfViewerPageState extends State<PdfViewerPage> {
-  late PdfControllerPinch pdfController;
+  PdfControllerPinch? pdfController;
   bool isLoading = true;
   String? errorMessage;
+  int currentPage = 1;
+  int totalPages = 0;
 
   @override
   void initState() {
@@ -201,16 +204,26 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
         errorMessage = null;
       });
 
-      pdfController = PdfControllerPinch(
-        document: PdfDocument.openData(
-          Dio()
-              .get(
-                widget.url,
-                options: Options(responseType: ResponseType.bytes),
-              )
-              .then((response) => response.data),
-        ),
+      final response = await Dio().get(
+        widget.url,
+        options: Options(responseType: ResponseType.bytes),
       );
+
+      if (response.data == null || response.data.isEmpty) {
+        throw Exception('Failed to load PDF data.');
+      }
+
+      pdfController = PdfControllerPinch(
+        document: PdfDocument.openData(response.data),
+        viewportFraction: 0.8,
+      );
+
+      pdfController?.addListener(() {
+        setState(() {
+          currentPage = pdfController?.page.round() ?? 1;
+          totalPages = pdfController?.pagesCount ?? 0;
+        });
+      });
 
       setState(() {
         isLoading = false;
@@ -284,13 +297,18 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(
+          widget.title,
+          style: const TextStyle(fontFamily: 'Orbitron'),
+        ),
         actions: [
           IconButton(icon: const Icon(Icons.download), onPressed: _downloadPdf),
         ],
       ),
-      body: isLoading
-          ? const Center(
+      body: Stack(
+        children: [
+          if (isLoading)
+            const Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -300,20 +318,49 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
                 ],
               ),
             )
-          : errorMessage != null
-          ? Center(
+          else if (errorMessage != null)
+            Center(
               child: Text(
                 errorMessage!,
                 style: const TextStyle(color: Colors.red),
               ),
             )
-          : PdfViewPinch(controller: pdfController),
+          else
+            // Replaced the custom rotated Slider with a native Scrollbar for consistency and better UX.
+            Scrollbar(
+              thumbVisibility: true,
+              interactive: true,
+              thickness: 8,
+              radius: const Radius.circular(6),
+              child: PdfViewPinch(controller: pdfController!),
+            ),
+          if (!isLoading && errorMessage == null)
+            Positioned(
+              right: 12,
+              bottom: 12,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.black54,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  '$currentPage / ${totalPages == 0 ? '?' : totalPages}',
+                  style: const TextStyle(color: Colors.white, fontSize: 12),
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 
   @override
   void dispose() {
-    pdfController.dispose();
+    pdfController?.dispose();
     super.dispose();
   }
 }

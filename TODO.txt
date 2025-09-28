@@ -3,6 +3,7 @@ Urgent Todo's -
 - fix inconsistency in text etc
 - actually add content 
 - ios builds
+- MAKE SURE firebase analytics are working
 - take hod's permission and launch this publicly
 - readme and hosting on github and sharing it with firebase app distribution
 
@@ -13,7 +14,7 @@ Future Improvements -
 
 - search button (to find words inside a pdf)
 - ability to copy text from a pdf
-- smooth scrolling (increase sensitivity), page no slider at right
+- smooth scrolling (increase sensitivity)
 
 
 Use high-quality icons (e.g., Material Icons, Ionicons, or custom SVGs).
