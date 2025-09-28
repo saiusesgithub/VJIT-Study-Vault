@@ -102,7 +102,7 @@ class _HomepageState extends State<Homepage> {
         title: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Image.asset('assets/logos/vjit_logo.png', height: 32, width: 32),
+            Image.asset('assets/logos/VjitLogo.png', height: 32, width: 32),
             const SizedBox(width: 8),
             const Text(
               'VJIT STUDY VAULT',

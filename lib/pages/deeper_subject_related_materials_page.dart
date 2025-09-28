@@ -111,10 +111,13 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
   late PdfControllerPinch pdfController;
   bool isLoading = true;
   String? errorMessage;
+  late int totalPages;
+  late int currentPage;
 
   @override
   void initState() {
     super.initState();
+    currentPage = 1;
     _initializePdf();
   }
 
@@ -134,7 +137,16 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
               )
               .then((response) => response.data),
         ),
+        viewportFraction: 0.8, // Increased scroll sensitivity
       );
+
+      pdfController.addListener(() {
+        setState(() {
+          currentPage = pdfController.page.round();
+          // Fixed type issue by ensuring `totalPages` is non-null.
+          totalPages = pdfController.pagesCount ?? 0;
+        });
+      });
 
       setState(() {
         isLoading = false;
@@ -206,25 +218,46 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
           IconButton(icon: const Icon(Icons.download), onPressed: _downloadPdf),
         ],
       ),
-      body: isLoading
-          ? const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(),
-                  SizedBox(height: 16),
-                  Text('Loading PDF...'),
-                ],
+      body: Stack(
+        children: [
+          isLoading
+              ? const Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(),
+                      SizedBox(height: 16),
+                      Text('Loading PDF...'),
+                    ],
+                  ),
+                )
+              : errorMessage != null
+              ? Center(
+                  child: Text(
+                    errorMessage!,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                )
+              : PdfViewPinch(controller: pdfController),
+          if (!isLoading && errorMessage == null)
+            Align(
+              alignment: Alignment.centerRight,
+              child: RotatedBox(
+                quarterTurns: 1,
+                child: Slider(
+                  value: currentPage.toDouble(),
+                  min: 1,
+                  max: totalPages.toDouble(),
+                  divisions: totalPages,
+                  label: 'Page $currentPage',
+                  onChanged: (value) {
+                    pdfController.jumpToPage(value.toInt());
+                  },
+                ),
               ),
-            )
-          : errorMessage != null
-          ? Center(
-              child: Text(
-                errorMessage!,
-                style: const TextStyle(color: Colors.red),
-              ),
-            )
-          : PdfViewPinch(controller: pdfController),
+            ),
+        ],
+      ),
     );
   }
 

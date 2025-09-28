@@ -72,7 +72,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
             title: "Welcome to \nVJIT Study Vault",
             body: "One app for every branch, every year",
             image: Center(
-              child: Image.asset('assets/logos/vjit_logo.png', height: 150),
+              child: Image.asset('assets/logos/VjitLogo.png', height: 150),
             ),
             decoration: const PageDecoration(
               titleTextStyle: TextStyle(
