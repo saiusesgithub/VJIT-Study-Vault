@@ -151,6 +151,8 @@ class SubjectRelatedMaterialsPage extends StatelessWidget {
                             fontFamily: 'Orbitron',
                           ),
                           textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis, // Added to handle long text
+                          maxLines: 2, // Limits the text to 2 lines
                         ),
                       ),
                     ),
@@ -300,18 +302,9 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
             )
           : errorMessage != null
           ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error, size: 64, color: Colors.red),
-                  const SizedBox(height: 16),
-                  Text(errorMessage!),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: _initializePdf,
-                    child: const Text('Retry'),
-                  ),
-                ],
+              child: Text(
+                errorMessage!,
+                style: const TextStyle(color: Colors.red),
               ),
             )
           : PdfViewPinch(controller: pdfController),

@@ -20,15 +20,6 @@ class DeeperSubjectRelatedMaterialsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get unique values for the labelKey (e.g., units, years)
-    final labelValues =
-        materials
-            .map((item) => item[labelKey])
-            .where((val) => val != null)
-            .toSet()
-            .toList()
-          ..sort();
-
     return Scaffold(
       appBar: AppBar(title: Text('$subjectName $cardLabelPrefix Options')),
       body: RefreshIndicator(
@@ -45,16 +36,15 @@ class DeeperSubjectRelatedMaterialsPage extends StatelessWidget {
               mainAxisSpacing: 12,
               childAspectRatio: 1.2,
             ),
-            itemCount: labelValues.length,
+            // Updated to display all materials, even if they share the same labelKey value.
+            itemCount: materials.length,
             itemBuilder: (context, idx) {
-              final labelValue = labelValues[idx];
+              final material = materials[idx];
+              final labelValue = material[labelKey];
+              final url = material['url'];
+
               return InkWell(
                 onTap: () {
-                  final material = materials.firstWhere(
-                    (item) => item[labelKey] == labelValue,
-                    orElse: () => null,
-                  );
-                  final url = material != null ? material['url'] : null;
                   if (url == null || url.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -229,18 +219,9 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
             )
           : errorMessage != null
           ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error, size: 64, color: Colors.red),
-                  const SizedBox(height: 16),
-                  Text(errorMessage!),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: _initializePdf,
-                    child: const Text('Retry'),
-                  ),
-                ],
+              child: Text(
+                errorMessage!,
+                style: const TextStyle(color: Colors.red),
               ),
             )
           : PdfViewPinch(controller: pdfController),
