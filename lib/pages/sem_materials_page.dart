@@ -67,7 +67,7 @@ class SemMaterialsPage extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Center(
                 child: Text(
-                  'No materials available yet for the selected : ${numberWithSuffix(year)} year, ${numberWithSuffix(semester)} semester, and $branch branch.',
+                  'No materials available yet for the selected ${numberWithSuffix(year)} year, ${numberWithSuffix(semester)} semester, and $branch branch. But don\'t worry, new materials are added regularly! Keep checking back for updates. Want to contribute and make a difference? Open the Settings page to learn how you can help and the benefits of contributing.',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,

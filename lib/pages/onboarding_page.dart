@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -29,6 +30,17 @@ class _OnboardingPageState extends State<OnboardingPage> {
     setState(() {
       _prefsLoaded = true;
     });
+  }
+
+  Future<void> _logAnalyticsEvent() async {
+    await FirebaseAnalytics.instance.logEvent(
+      name: 'onboarding_selection',
+      parameters: {
+        'branch': selectedBranch,
+        'year': selectedYear,
+        'semester': selectedSemester,
+      },
+    );
   }
 
   @override
@@ -222,6 +234,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
             await prefs!.setInt('year', selectedYear!);
             await prefs!.setInt('semester', selectedSemester!);
             await prefs!.setBool('onboardingComplete', true);
+
+            // Log analytics event
+            await _logAnalyticsEvent();
+
             if (mounted) {
               Navigator.pushReplacementNamed(context, 'home');
             }
