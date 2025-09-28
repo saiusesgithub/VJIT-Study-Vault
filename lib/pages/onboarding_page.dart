@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'package:permission_handler/permission_handler.dart';
 
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
@@ -41,6 +42,21 @@ class _OnboardingPageState extends State<OnboardingPage> {
         'semester': selectedSemester,
       },
     );
+  }
+
+  Future<void> _requestStoragePermission() async {
+    PermissionStatus status = await Permission.storage.request();
+    if (status.isDenied || status.isPermanentlyDenied) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Storage permission is required to download files.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      if (status.isPermanentlyDenied) {
+        openAppSettings();
+      }
+    }
   }
 
   @override
@@ -227,6 +243,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
           ),
         ],
         onDone: () async {
+          await _requestStoragePermission();
           if (selectedBranch != null &&
               selectedYear != null &&
               selectedSemester != null) {
