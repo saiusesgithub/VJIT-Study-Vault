@@ -9,3 +9,23 @@ search button (to find words inside a pdf)
 ability to copy text from a pdf
 
 dark mode
+
+ios builds
+
+google ads
+
+firebase analytics
+
+contribution page (feature names of ppl who have contributed)
+
+
+Add subtle animations for transitions, button presses, 
+and page navigation using AnimatedContainer, Hero, or Lottie.
+
+Test on multiple devices and screen sizes.
+
+Use high-quality icons (e.g., Material Icons, Ionicons, or custom SVGs).
+
+Optimize for performance by reducing widget rebuilds and using tools like flutter analyze and flutter doctor.
+
+Use MediaQuery and LayoutBuilder to adapt layouts dynamically.

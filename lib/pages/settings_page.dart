@@ -122,6 +122,9 @@ class SettingsPage extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () {
                         loadMaterials();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Fetched new materials!')),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         minimumSize: const Size.fromHeight(48),

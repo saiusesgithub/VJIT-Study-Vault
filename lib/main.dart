@@ -4,6 +4,7 @@ import 'package:vjitstudyvault/pages/feedback_and_report_page.dart';
 import 'package:vjitstudyvault/pages/homepage.dart';
 import 'package:vjitstudyvault/pages/onboarding_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vjitstudyvault/theme/theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,10 +42,12 @@ class _MyAppState extends State<MyApp> {
     final bool? onboardingComplete = prefs?.getBool('onboardingComplete');
     return MaterialApp(
       title: 'VJIT Study Vault',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
-        fontFamily: 'Poppins',
-      ),
+      // theme: ThemeData(
+      //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
+      //   fontFamily: 'Poppins',
+      // ),
+      theme: AppTheme.lightTheme,
+      themeMode: ThemeMode.light,
       routes: {
         'onboarding': (context) => const OnboardingPage(),
         'home': (context) => const Homepage(),
