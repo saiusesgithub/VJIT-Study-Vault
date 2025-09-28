@@ -1,25 +1,21 @@
-design/aesthetics all over the app
+Urgent Todo's - 
+- actually add content
+- contribution page (feature names of ppl who have contributed)
+- Test on multiple devices and screen sizes.
+- simple transitions
 
-actually add content
 
-while displaying a pdf , show a slider on the right edge (with page no's) 
-make the sensitivity of sliding a little more , its too slow to scroll rn
 
-search button (to find words inside a pdf)
-ability to copy text from a pdf
+Future Improvements - 
+- google ads
+- dark mode
+- ios builds
+- search button (to find words inside a pdf)
+- ability to copy text from a pdf
+- smooth scrolling (increase sensitivity), page no slider at right
 
-dark mode
 
-ios builds
 
-google ads
-
-contribution page (feature names of ppl who have contributed)
-
-Add subtle animations for transitions, button presses, 
-and page navigation using AnimatedContainer, Hero, or Lottie.
-
-Test on multiple devices and screen sizes.
 
 Use high-quality icons (e.g., Material Icons, Ionicons, or custom SVGs).
 
