@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "958353387131",
+    "project_id": "vjit-study-vault",
+    "storage_bucket": "vjit-study-vault.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:958353387131:android:c3d4965a7aa354a09e7cde",
+        "android_client_info": {
+          "package_name": "com.example.vjitstudyvault"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBn_-pBWcemdU0yoKP0nRSnxD1HPV_a5zw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
