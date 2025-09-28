@@ -1,6 +1,7 @@
 import 'dart:math' as math;
+import 'dart:io';
 import 'package:permission_handler/permission_handler.dart';
-
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -45,16 +46,26 @@ class _OnboardingPageState extends State<OnboardingPage> {
   }
 
   Future<void> _requestStoragePermission() async {
+    if (!Platform.isAndroid)
+      return; // iOS/macOS: saving to app docs dir is fine
+
+    final sdkInt = (await DeviceInfoPlugin().androidInfo).version.sdkInt;
+
+    // Android 13+ (API 33) and especially 15+ (API 35): No popup needed for general file writes
+    if (sdkInt >= 33) return;
+
     PermissionStatus status = await Permission.storage.request();
     if (status.isDenied || status.isPermanentlyDenied) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Storage permission is required to download files.'),
-          backgroundColor: Colors.red,
-        ),
-      );
-      if (status.isPermanentlyDenied) {
-        openAppSettings();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Storage permission is required to download files.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        if (status.isPermanentlyDenied) {
+          openAppSettings();
+        }
       }
     }
   }

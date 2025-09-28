@@ -1,6 +1,5 @@
 Urgent Todo's - 
 - Test on multiple devices and screen sizes.
-- fix inconsistency in text etc
 - actually add content 
 - ios builds
 - MAKE SURE firebase analytics are working
@@ -15,9 +14,8 @@ Future Improvements -
 - search button (to find words inside a pdf)
 - ability to copy text from a pdf
 - smooth scrolling (increase sensitivity)
+- refactor the entire coedbase and make it better organized manually
 
-
-Use high-quality icons (e.g., Material Icons, Ionicons, or custom SVGs).
 
 Optimize for performance by reducing widget rebuilds and using tools like flutter analyze and flutter doctor.
 

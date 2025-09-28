@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:pdfx/pdfx.dart';
 import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
@@ -288,6 +288,35 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
     }
   }
 
+  Future<void> _openInDrive() async {
+    try {
+      final uri = Uri.parse(widget.url);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+
+        // Log analytics event
+        await FirebaseAnalytics.instance.logEvent(
+          name: 'view_in_drive_clicked',
+          parameters: {
+            'subject_name': widget.subjectName,
+            'material_title': widget.title,
+          },
+        );
+      } else {
+        throw Exception('Could not launch URL');
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Could not open in browser: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
   Future<bool> _isAndroid10OrAbove() async {
     final androidInfo = await DeviceInfoPlugin().androidInfo;
     return androidInfo.version.sdkInt >= 29;
@@ -302,7 +331,16 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
           style: const TextStyle(fontFamily: 'Orbitron'),
         ),
         actions: [
-          IconButton(icon: const Icon(Icons.download), onPressed: _downloadPdf),
+          IconButton(
+            icon: const Icon(Icons.open_in_browser),
+            tooltip: 'View in Drive',
+            onPressed: _openInDrive,
+          ),
+          IconButton(
+            icon: const Icon(Icons.download),
+            tooltip: 'Download',
+            onPressed: _downloadPdf,
+          ),
         ],
       ),
       body: Stack(
