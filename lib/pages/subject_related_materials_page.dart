@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'deeper_subject_related_materials_page.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class SubjectRelatedMaterialsPage extends StatelessWidget {
   final String subjectName;
@@ -222,41 +223,57 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
 
   Future<void> _downloadPdf() async {
     try {
-      Directory? downloadsDir;
-      if (Platform.isAndroid) {
-        downloadsDir = Directory('/storage/emulated/0/Download');
-        if (!downloadsDir.existsSync()) {
-          downloadsDir = await getExternalStorageDirectory();
+      // Request storage permission
+      PermissionStatus status = await Permission.storage.request();
+
+      if (status.isGranted) {
+        Directory? downloadsDir;
+        if (Platform.isAndroid) {
+          downloadsDir = Directory('/storage/emulated/0/Download');
+          if (!downloadsDir.existsSync()) {
+            downloadsDir = await getExternalStorageDirectory();
+          }
+        } else {
+          downloadsDir = await getApplicationDocumentsDirectory();
         }
-      } else {
-        downloadsDir = await getApplicationDocumentsDirectory();
-      }
 
-      if (downloadsDir != null) {
-        final fileName = '${widget.subjectName}_${widget.title}.pdf';
-        final savePath = '${downloadsDir.path}/$fileName';
+        if (downloadsDir != null) {
+          final fileName = '${widget.subjectName}_${widget.title}.pdf';
+          final savePath = '${downloadsDir.path}/$fileName';
 
-        await Dio().download(widget.url, savePath);
+          await Dio().download(widget.url, savePath);
 
-        // Log download event to Firebase Analytics
-        await FirebaseAnalytics.instance.logEvent(
-          name: 'download_button_clicked',
-          parameters: {
-            'subject_name': widget.subjectName,
-            'material_title': widget.title,
-          },
-        );
-
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Downloaded to Downloads/$fileName'),
-              backgroundColor: Colors.green,
-            ),
+          // Log download event to Firebase Analytics
+          await FirebaseAnalytics.instance.logEvent(
+            name: 'download_button_clicked',
+            parameters: {
+              'subject_name': widget.subjectName,
+              'material_title': widget.title,
+            },
           );
+
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Downloaded to Downloads/$fileName'),
+                backgroundColor: Colors.green,
+              ),
+            );
+          }
+        } else {
+          throw Exception('Could not access downloads directory');
         }
-      } else {
-        throw Exception('Could not access downloads directory');
+      } else if (status.isDenied) {
+        // Permission denied
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Storage permission is required to download files.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      } else if (status.isPermanentlyDenied) {
+        // Permission permanently denied, open app settings
+        openAppSettings();
       }
     } catch (e) {
       if (mounted) {

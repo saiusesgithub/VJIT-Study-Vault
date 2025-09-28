@@ -14,10 +14,7 @@ ios builds
 
 google ads
 
-firebase analytics
-
 contribution page (feature names of ppl who have contributed)
-
 
 Add subtle animations for transitions, button presses, 
 and page navigation using AnimatedContainer, Hero, or Lottie.
