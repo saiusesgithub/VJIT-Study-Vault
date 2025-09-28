@@ -5,9 +5,12 @@ import 'package:vjitstudyvault/pages/homepage.dart';
 import 'package:vjitstudyvault/pages/onboarding_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vjitstudyvault/theme/theme.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -18,6 +21,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   SharedPreferences? prefs;
   bool _isLoaded = false;
 
@@ -25,6 +29,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     _initSharedPreferences();
+    FirebaseAnalytics.instance.logAppOpen();
   }
 
   Future<void> _initSharedPreferences() async {

@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'deeper_subject_related_materials_page.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 class SubjectRelatedMaterialsPage extends StatelessWidget {
   final String subjectName;
@@ -236,6 +237,16 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
         final savePath = '${downloadsDir.path}/$fileName';
 
         await Dio().download(widget.url, savePath);
+
+        // Log download event to Firebase Analytics
+        await FirebaseAnalytics.instance.logEvent(
+          name: 'download_button_clicked',
+          parameters: {
+            'subject_name': widget.subjectName,
+            'material_title': widget.title,
+          },
+        );
+
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
