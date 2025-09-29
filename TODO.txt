@@ -1,43 +1,61 @@
-Urgent Todo's - 
-- Test on multiple devices and screen sizes.
-- actually add content 
-- ios builds
-- take hod's permission and launch this publicly
-- readme and hosting on github and sharing it with firebase app distribution
+# 🚀 Future Improvements Roadmap
 
-Future Improvements - 
-- google ads
-- dark mode
-- better organization of json / using actual database like supabase/firestore/mongodb
+A structured list of planned enhancements and optimizations for the project.
 
-- search button (to find words inside a pdf)
-- ability to copy text from a pdf
-- smooth scrolling (increase sensitivity)
-- refactor the entire codebase and make it better organized manually (remove duplications , divide widgets into seperate classes)
+---
 
+## 📱 Platform Support
+- [ ] **iOS Builds** – Extend compatibility beyond Android.  
+- [ ] **In-App Updates** – Notify users about new versions without requiring manual downloads.
+- [ ] **PWA/Website** – Extend compatibility for Desktop Users
 
-Optimize for performance by reducing widget rebuilds and using tools like flutter analyze and flutter doctor.
+---
 
-Use MediaQuery and LayoutBuilder to adapt layouts dynamically.
+## 🎨 UI/UX Enhancements
+- [ ] **Dark Mode** – Provide a toggle for light/dark themes.  
+- [ ] **Smooth Scrolling** – Increase sensitivity for a better reading experience.  
+- [ ] **Search Inside PDFs** – Add a search bar to quickly find words.  
+- [ ] **Copy Text from PDFs** – Allow text selection and copying.  
+- [ ] **Dynamic Layouts** – Use `MediaQuery` and `LayoutBuilder` for responsive design.  
 
-Push Notifications:
-Integrate Firebase Cloud Messaging (FCM) to send notifications for updates or new materials.
+---
 
-User Feedback:
-Add a feedback form to collect user suggestions and bug reports.
+## ⚡ Performance & Code Quality
+- [ ] **Optimize Widget Rebuilds** – Use `flutter analyze` and `flutter doctor` to reduce unnecessary rebuilds.  
+- [ ] **Refactor Codebase** – Remove duplications, separate widgets into dedicated classes.  
+- [ ] **Introduce State Management** – Adopt Provider, Riverpod, or Bloc instead of passing raw lists.  
+- [ ] **Offline-First Storage** – Implement Hive/SQLite with background download notifications.  
 
-Analytics Enhancements:
-Track user retention and engagement over time.
-Add custom events for more granular insights.
+---
 
-In-App Updates:
-Implement in-app updates to notify users about new versions.
+## ☁️ Backend & Data
+- [ ] **Database Migration** – Replace static JSON with Supabase/Firestore/MongoDB.  
+- [ ] **Secure Uploads** – Add authenticated endpoints for crowd contributions.  
+- [ ] **Admin-Friendly Backend** – Firestore/Supabase for easy updates.  
 
-Monetization:
-Consider adding ads (e.g., Google AdMob)
+---
 
-Introduce proper state management (Provider, Riverpod, Bloc) instead of passing raw lists down multiple screens.
-Implement offline-first storage (e.g., Hive/SQflite) and background download notifications to meet the “offline access” promise.
+## 🔔 Notifications & Feedback
+- [ ] **Push Notifications** – Integrate Firebase Cloud Messaging (FCM) for updates.  
+- [ ] **User Feedback Form** – Collect suggestions and bug reports directly in the app.  
 
-Replace static Firebase Hosting JSON with an admin-friendly backend (Firestore/Supabase) and secure upload endpoints before crowd contributions.
-Refresh README/docs (real text, screenshots, contribution guide) and add a CHANGELOG for future releases.
+---
+
+## 📊 Analytics
+- [ ] **User Engagement Tracking** – Measure retention and daily active users.  
+- [ ] **Custom Events** – Track specific actions for deeper insights.  
+
+---
+
+## 💰 Monetization
+- [ ] **Google AdMob Integration** – Add ads for revenue generation.  
+- [ ] **Future Revenue Models** – Explore premium features or subscription tiers.  
+
+---
+
+## 📄 Documentation & Community
+- [ ] **README Refresh** – Add real text, screenshots, and feature highlights.  
+- [ ] **Contribution Guide** – Onboarding for open-source contributors.  
+- [ ] **CHANGELOG** – Track updates and new releases.  
+
+---

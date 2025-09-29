@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:vjitstudyvault/pages/subject_related_materials_page.dart';
 
@@ -37,6 +38,26 @@ class SemMaterialsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool noInternet = false;
+
+    // Check for internet connectivity
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final connectivityResult = await Connectivity().checkConnectivity();
+      if (connectivityResult == ConnectivityResult.none) {
+        noInternet = true;
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                'No internet connection. Please check your network.',
+              ),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    });
+
     final filteredMaterials = <dynamic>[];
     final seenSubjects = <String>{};
     for (var item in materials) {
@@ -48,10 +69,26 @@ class SemMaterialsPage extends StatelessWidget {
         seenSubjects.add(item['subject']);
       }
     }
+
     return RefreshIndicator(
       onRefresh: loadMaterials,
       child: Builder(
         builder: (context) {
+          if (noInternet) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Center(
+                child: Text(
+                  'No internet connection. Please check your network and try again.',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            );
+          }
           if (!materialsLoaded) {
             return ListView(
               children: const [

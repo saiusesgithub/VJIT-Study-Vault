@@ -50,37 +50,42 @@ class DeeperSubjectRelatedMaterialsPage extends StatelessWidget {
               final url = material['url'];
 
               return InkWell(
-                onTap: () {
+                onTap: () async {
                   if (url == null || url.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
-                          'No PDF for $cardLabelPrefix $labelValue',
+                          'No content available for $cardLabelPrefix $labelValue',
                         ),
                       ),
                     );
                     return;
                   }
 
-                  // Log download/redirect event
-                  FirebaseAnalytics.instance.logEvent(
-                    name: 'download_button_clicked',
-                    parameters: {
-                      'material_title': '$cardLabelPrefix $labelValue',
-                      'subject_name': subjectName,
-                    },
-                  );
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => PdfViewerPage(
-                        url: url,
-                        title: '$cardLabelPrefix $labelValue',
-                        subjectName: subjectName,
+                  if (material['type'] == 'Video') {
+                    // Open YouTube video
+                    if (await canLaunch(url)) {
+                      await launch(url);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Could not open the video link.'),
+                        ),
+                      );
+                    }
+                  } else {
+                    // Handle other types (e.g., PDFs)
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PdfViewerPage(
+                          url: url,
+                          title: '$cardLabelPrefix $labelValue',
+                          subjectName: subjectName,
+                        ),
                       ),
-                    ),
-                  );
+                    );
+                  }
                 },
                 child: Card(
                   elevation: 2,

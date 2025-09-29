@@ -35,14 +35,16 @@ class _OnboardingPageState extends State<OnboardingPage> {
   }
 
   Future<void> _logAnalyticsEvent() async {
-    if (selectedBranch != null && selectedYear != null && selectedSemester != null) {
+    if (selectedBranch != null &&
+        selectedYear != null &&
+        selectedSemester != null) {
       // Log the onboarding event with all parameters
       await FirebaseAnalytics.instance.logEvent(
         name: 'onboarding_selection',
         parameters: {
-          'branch': selectedBranch,
-          'year': selectedYear,
-          'semester': selectedSemester,
+          'branch': selectedBranch ?? '',
+          'year': selectedYear ?? 0,
+          'semester': selectedSemester ?? 0,
         },
       );
 
@@ -63,7 +65,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
   }
 
   Future<void> _requestStoragePermission() async {
-    if (!Platform.isAndroid) return; // iOS/macOS: saving to app docs dir is fine
+    if (!Platform.isAndroid)
+      return; // iOS/macOS: saving to app docs dir is fine
 
     final sdkInt = (await DeviceInfoPlugin().androidInfo).version.sdkInt;
 
