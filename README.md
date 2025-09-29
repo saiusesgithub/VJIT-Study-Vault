@@ -28,9 +28,12 @@ Students often struggle to find **scattered study materials** across various Wha
 
 ## ▶️ Demo
 
-<div align="center">
-https://github.com/user-attachments/assets/24ce896f-6abe-45b6-b064-9cf7a77f14af
-</div>
+
+
+https://github.com/user-attachments/assets/1a1238f8-349c-4031-b768-61e1aaa4d48e
+
+
+---
 
 ---
 
