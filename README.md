@@ -41,9 +41,9 @@ https://github.com/user-attachments/assets/1a1238f8-349c-4031-b768-61e1aaa4d48e
 
 <div align="center">
 
-| Onboarding Setup | Materials Grid | PDF Viewer | Downloads |
-|:---:|:---:|:---:|:---:|
-| ![Onboarding Screen](screenshots/onboarding.png) | ![Materials Grid](screenshots/materials_grid.png) | ![PDF Viewer](screenshots/pdf_viewer.png) | ![Downloads](screenshots/downloads.png) |
+| Onboarding | Setup | Materials Grid | PDF Viewer | About |
+|:---:|:---:|:---:|:---:|:---:|
+| ![Onboarding](screenshots/1.jpg) | ![Setup](screenshots/2.jpg) | ![Materials Grid](screenshots/3.jpg) | ![PDF Viewer](screenshots/4.jpg) | ![About](screenshots/5.jpg) |
 
 *Experience seamless navigation through your academic materials.*
 
