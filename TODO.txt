@@ -2,7 +2,6 @@ Urgent Todo's -
 - Test on multiple devices and screen sizes.
 - actually add content 
 - ios builds
-- MAKE SURE firebase analytics are working
 - take hod's permission and launch this publicly
 - readme and hosting on github and sharing it with firebase app distribution
 
