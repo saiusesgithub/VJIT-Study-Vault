@@ -7,6 +7,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vjitstudyvault/theme/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'dart:io';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,6 +33,12 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     _initSharedPreferences();
     FirebaseAnalytics.instance.logAppOpen();
+    logDeviceInfo(); // Log device information during app initialization
+
+    // Check internet connectivity on app start
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      checkInternetOnAppStart(context);
+    });
   }
 
   Future<void> _initSharedPreferences() async {
@@ -37,6 +46,45 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       _isLoaded = true;
     });
+  }
+
+  Future<void> logDeviceInfo() async {
+    final deviceInfo = DeviceInfoPlugin();
+    String deviceName = 'Unknown';
+
+    if (Platform.isAndroid) {
+      final androidInfo = await deviceInfo.androidInfo;
+      deviceName = '${androidInfo.manufacturer} ${androidInfo.model}';
+    } else if (Platform.isIOS) {
+      final iosInfo = await deviceInfo.iosInfo;
+      deviceName = '${iosInfo.name} (${iosInfo.model})';
+    }
+
+    // Log device name as a user property
+    await FirebaseAnalytics.instance.setUserProperty(
+      name: 'device_name',
+      value: deviceName,
+    );
+
+    // Optionally log as an event
+    await FirebaseAnalytics.instance.logEvent(
+      name: 'device_info',
+      parameters: {
+        'device_name': deviceName,
+      },
+    );
+  }
+
+  Future<void> checkInternetOnAppStart(BuildContext context) async {
+    final connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No internet connection. Please check your network.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   @override

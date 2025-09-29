@@ -67,6 +67,16 @@ class SubjectRelatedMaterialsPage extends StatelessWidget {
                   return InkWell(
                     onTap: () {
                       final typeStr = type?.toString().toLowerCase() ?? '';
+
+                      // Log download/redirect event
+                      FirebaseAnalytics.instance.logEvent(
+                        name: 'download_button_clicked',
+                        parameters: {
+                          'material_title': typeStr,
+                          'subject_name': subjectName,
+                        },
+                      );
+
                       if (typeStr == 'notes') {
                         final notesMaterials = subjectMaterials
                             .where(
@@ -289,8 +299,6 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
   //   }
   // }
   //
-
-  // ...existing code...
 
   // Future<void> _downloadPdf() async {
   //   try {

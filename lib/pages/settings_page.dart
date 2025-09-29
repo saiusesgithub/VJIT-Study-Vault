@@ -3,6 +3,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:math';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 class SettingsPage extends StatelessWidget {
   final Future<void> Function() loadMaterials;
@@ -63,6 +64,14 @@ class SettingsPage extends StatelessWidget {
                                 iconSize: 25,
                                 icon: const Icon(Ionicons.logo_github),
                                 onPressed: () {
+                                  // Log social link click event for GitHub
+                                  FirebaseAnalytics.instance.logEvent(
+                                    name: 'social_link_clicked',
+                                    parameters: {
+                                      'platform': 'github',
+                                    },
+                                  );
+
                                   launchUrl(
                                     Uri.parse(
                                       "https://github.com/saiusesgithub",
@@ -75,6 +84,14 @@ class SettingsPage extends StatelessWidget {
                                 iconSize: 25,
                                 icon: const Icon(Ionicons.logo_linkedin),
                                 onPressed: () {
+                                  // Log social link click event for LinkedIn
+                                  FirebaseAnalytics.instance.logEvent(
+                                    name: 'social_link_clicked',
+                                    parameters: {
+                                      'platform': 'linkedin',
+                                    },
+                                  );
+
                                   launchUrl(
                                     Uri.parse(
                                       "https://linkedin.com/in/saisrujanpunati",
@@ -87,6 +104,14 @@ class SettingsPage extends StatelessWidget {
                                 iconSize: 25,
                                 icon: const Icon(Ionicons.logo_instagram),
                                 onPressed: () {
+                                  // Log social link click event for Instagram
+                                  FirebaseAnalytics.instance.logEvent(
+                                    name: 'social_link_clicked',
+                                    parameters: {
+                                      'platform': 'instagram',
+                                    },
+                                  );
+
                                   launchUrl(
                                     Uri.parse(
                                       "https://instagram.com/__saisrujan__",

@@ -19,3 +19,19 @@ Future Improvements -
 Optimize for performance by reducing widget rebuilds and using tools like flutter analyze and flutter doctor.
 
 Use MediaQuery and LayoutBuilder to adapt layouts dynamically.
+
+Push Notifications:
+Integrate Firebase Cloud Messaging (FCM) to send notifications for updates or new materials.
+
+User Feedback:
+Add a feedback form to collect user suggestions and bug reports.
+
+Analytics Enhancements:
+Track user retention and engagement over time.
+Add custom events for more granular insights.
+
+In-App Updates:
+Implement in-app updates to notify users about new versions.
+
+Monetization:
+Consider adding ads (e.g., Google AdMob)

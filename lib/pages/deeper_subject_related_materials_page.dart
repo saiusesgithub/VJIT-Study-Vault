@@ -64,6 +64,16 @@ class DeeperSubjectRelatedMaterialsPage extends StatelessWidget {
                     );
                     return;
                   }
+
+                  // Log download/redirect event
+                  FirebaseAnalytics.instance.logEvent(
+                    name: 'download_button_clicked',
+                    parameters: {
+                      'material_title': '$cardLabelPrefix $labelValue',
+                      'subject_name': subjectName,
+                    },
+                  );
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(
