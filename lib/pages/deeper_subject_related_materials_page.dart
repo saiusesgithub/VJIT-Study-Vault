@@ -5,6 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../services/download_helper.dart';
 
 class DeeperSubjectRelatedMaterialsPage extends StatelessWidget {
   final String subjectName;
@@ -168,84 +169,191 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
     }
   }
 
-  Future<void> _openInDrive() async {
+  Future<void> _openInPdfViewer() async {
     try {
-      final uri = Uri.parse(widget.url);
-      if (await canLaunchUrl(uri)) {
-        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Row(
+            children: [
+              SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
+              SizedBox(width: 12),
+              Text('Preparing PDF...'),
+            ],
+          ),
+          duration: Duration(seconds: 3),
+        ),
+      );
 
-        // Log analytics event
-        await FirebaseAnalytics.instance.logEvent(
-          name: 'view_in_drive_clicked',
-          parameters: {
-            'subject_name': widget.subjectName,
-            'material_title': widget.title,
-          },
+      final dio = Dio();
+      final tempDir = await getTemporaryDirectory();
+      final fileName =
+          '${widget.title.replaceAll(RegExp(r'[^\w\s-]'), '')}.pdf';
+      final filePath = '${tempDir.path}/$fileName';
+
+      await dio.download(widget.url, filePath);
+
+      final file = File(filePath);
+      if (!await file.exists()) {
+        throw Exception('Failed to download PDF');
+      }
+
+      await launchUrl(Uri.file(filePath), mode: LaunchMode.externalApplication);
+
+      FirebaseAnalytics.instance.logEvent(
+        name: 'open_in_pdf_viewer',
+        parameters: {'subject': widget.subjectName, 'title': widget.title},
+      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Opening in PDF viewer...'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
+          ),
         );
-      } else {
-        throw Exception('Could not launch URL');
       }
     } catch (e) {
       if (mounted) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Could not open in browser: ${e.toString()}'),
+            content: Text('Error opening PDF: ${e.toString()}'),
             backgroundColor: Colors.red,
+            action: SnackBarAction(
+              label: 'Retry',
+              textColor: Colors.white,
+              onPressed: _openInPdfViewer,
+            ),
           ),
         );
       }
     }
   }
 
+  // Future<void> _downloadPdf() async {
+  //   try {
+  //     Directory? downloadsDir;
+  //     if (Platform.isAndroid) {
+  //       downloadsDir = Directory('/storage/emulated/0/Download');
+  //       if (!downloadsDir.existsSync()) {
+  //         downloadsDir = await getExternalStorageDirectory();
+  //       }
+  //     } else {
+  //       downloadsDir = await getApplicationDocumentsDirectory();
+  //     }
+
+  //     if (downloadsDir != null) {
+  //       final fileName = '${widget.subjectName}_${widget.title}.pdf';
+  //       final savePath = '${downloadsDir.path}/$fileName';
+
+  //       await Dio().download(widget.url, savePath);
+
+  //       // Log download event to Firebase Analytics
+  //       await FirebaseAnalytics.instance.logEvent(
+  //         name: 'download_button_clicked',
+  //         parameters: {
+  //           'subject_name': widget.subjectName,
+  //           'material_title': widget.title,
+  //         },
+  //       );
+
+  //       if (mounted) {
+  //         ScaffoldMessenger.of(context).showSnackBar(
+  //           SnackBar(
+  //             content: Text('Downloaded to Downloads/$fileName'),
+  //             backgroundColor: Colors.green,
+  //           ),
+  //         );
+  //       }
+  //     } else {
+  //       throw Exception('Could not access downloads directory');
+  //     }
+  //   } catch (e) {
+  //     if (mounted) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(
+  //           content: Text('Download failed: ${e.toString()}'),
+  //           backgroundColor: Colors.red,
+  //         ),
+  //       );
+  //     }
+  //   }
+  // }
+
   Future<void> _downloadPdf() async {
     try {
-      Directory? downloadsDir;
-      if (Platform.isAndroid) {
-        downloadsDir = Directory('/storage/emulated/0/Download');
-        if (!downloadsDir.existsSync()) {
-          downloadsDir = await getExternalStorageDirectory();
-        }
-      } else {
-        downloadsDir = await getApplicationDocumentsDirectory();
-      }
+      // Show loading indicator
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Row(
+            children: [
+              SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
+              SizedBox(width: 12),
+              Text('Downloading...'),
+            ],
+          ),
+          duration: Duration(seconds: 5),
+        ),
+      );
 
-      if (downloadsDir != null) {
-        final fileName = '${widget.subjectName}_${widget.title}.pdf';
-        final savePath = '${downloadsDir.path}/$fileName';
+      final fileName = '${widget.subjectName}_${widget.title}.pdf';
+      final result = await DownloadHelper.downloadToPublicDownloads(
+        widget.url,
+        fileName,
+      );
 
-        await Dio().download(widget.url, savePath);
+      // Log download event
+      FirebaseAnalytics.instance.logEvent(
+        name: 'download_button_clicked',
+        parameters: {
+          'subject_name': widget.subjectName,
+          'material_title': widget.title,
+        },
+      );
 
-        // Log download event to Firebase Analytics
-        await FirebaseAnalytics.instance.logEvent(
-          name: 'download_button_clicked',
-          parameters: {
-            'subject_name': widget.subjectName,
-            'material_title': widget.title,
-          },
-        );
-
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Downloaded to Downloads/$fileName'),
-              backgroundColor: Colors.green,
+      if (mounted) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Downloaded: $result'),
+            backgroundColor: Colors.green,
+            action: SnackBarAction(
+              label: 'Open',
+              textColor: Colors.white,
+              onPressed: _openInPdfViewer,
             ),
-          );
-        }
-      } else {
-        throw Exception('Could not access downloads directory');
+          ),
+        );
       }
     } catch (e) {
       if (mounted) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Download failed: ${e.toString()}'),
             backgroundColor: Colors.red,
+            action: SnackBarAction(
+              label: 'Try Open Instead',
+              textColor: Colors.white,
+              onPressed: _openInPdfViewer,
+            ),
           ),
         );
       }
     }
   }
+
+  //
 
   @override
   Widget build(BuildContext context) {
@@ -257,9 +365,9 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.open_in_browser),
-            tooltip: 'View in Drive',
-            onPressed: _openInDrive,
+            onPressed: _openInPdfViewer,
+            icon: const Icon(Icons.open_in_new),
+            tooltip: 'Open in PDF Viewer',
           ),
           IconButton(
             icon: const Icon(Icons.download),
