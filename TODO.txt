@@ -13,7 +13,7 @@ Future Improvements -
 - search button (to find words inside a pdf)
 - ability to copy text from a pdf
 - smooth scrolling (increase sensitivity)
-- refactor the entire coedbase and make it better organized manually
+- refactor the entire codebase and make it better organized manually (remove duplications , divide widgets into seperate classes)
 
 
 Optimize for performance by reducing widget rebuilds and using tools like flutter analyze and flutter doctor.
@@ -35,3 +35,9 @@ Implement in-app updates to notify users about new versions.
 
 Monetization:
 Consider adding ads (e.g., Google AdMob)
+
+Introduce proper state management (Provider, Riverpod, Bloc) instead of passing raw lists down multiple screens.
+Implement offline-first storage (e.g., Hive/SQflite) and background download notifications to meet the “offline access” promise.
+
+Replace static Firebase Hosting JSON with an admin-friendly backend (Firestore/Supabase) and secure upload endpoints before crowd contributions.
+Refresh README/docs (real text, screenshots, contribution guide) and add a CHANGELOG for future releases.

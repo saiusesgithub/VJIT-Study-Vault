@@ -71,7 +71,7 @@ class _ContributePageState extends State<ContributePage> {
                   child: const Icon(Ionicons.logo_whatsapp),
                 ),
                 const SizedBox(height: 8),
-                const Expanded(
+                const Flexible(
                   child: Text(
                     'Contribute your PDFs or Google Drive links via WhatsApp. Your contributions will help countless students. Your name will be featured here forever, visible to countless students!',
                     style: TextStyle(fontSize: 16),
