@@ -139,7 +139,8 @@ https://github.com/user-attachments/assets/1a1238f8-349c-4031-b768-61e1aaa4d48e
 
 ### 📱 Get VJIT Study Vault
 
-[![Download APK](https://img.shields.io/badge/Download-Latest%20APK-success?style=for-the-badge&logo=android)](releases/latest)
+[![Download APK](https://img.shields.io/badge/Download-Latest%20APK-success?style=for-the-badge&logo=android)](https://github.com/saiusesgithub/VJIT-Study-Vault/releases/tag/v1.0)
+
 
 *Latest Version: **v1.0.0** | **Size: approx 50MB** | **Min Android**: 5.0 (Lollipop)+*
 
