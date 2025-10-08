@@ -7,8 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vjitstudyvault/theme/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:device_info_plus/device_info_plus.dart';
-import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 void main() async {
@@ -33,9 +31,6 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     _initSharedPreferences();
     FirebaseAnalytics.instance.logAppOpen();
-    logDeviceInfo(); // Log device information during app initialization
-
-    // Check internet connectivity on app start
     WidgetsBinding.instance.addPostFrameCallback((_) {
       checkInternetOnAppStart(context);
     });
@@ -46,33 +41,6 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       _isLoaded = true;
     });
-  }
-
-  Future<void> logDeviceInfo() async {
-    final deviceInfo = DeviceInfoPlugin();
-    String deviceName = 'Unknown';
-
-    if (Platform.isAndroid) {
-      final androidInfo = await deviceInfo.androidInfo;
-      deviceName = '${androidInfo.manufacturer} ${androidInfo.model}';
-    } else if (Platform.isIOS) {
-      final iosInfo = await deviceInfo.iosInfo;
-      deviceName = '${iosInfo.name} (${iosInfo.model})';
-    }
-
-    // Log device name as a user property
-    await FirebaseAnalytics.instance.setUserProperty(
-      name: 'device_name',
-      value: deviceName,
-    );
-
-    // Optionally log as an event
-    await FirebaseAnalytics.instance.logEvent(
-      name: 'device_info',
-      parameters: {
-        'device_name': deviceName,
-      },
-    );
   }
 
   Future<void> checkInternetOnAppStart(BuildContext context) async {
@@ -95,17 +63,13 @@ class _MyAppState extends State<MyApp> {
     final bool? onboardingComplete = prefs?.getBool('onboardingComplete');
     return MaterialApp(
       title: 'VJIT Study Vault',
-      // theme: ThemeData(
-      //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
-      //   fontFamily: 'Poppins',
-      // ),
       theme: AppTheme.lightTheme,
       themeMode: ThemeMode.light,
       routes: {
         'onboarding': (context) => const OnboardingPage(),
         'home': (context) => const Homepage(),
-        '/feedback_report_bug': (context) => const FeedbackAndReportPage(),
-        '/contribute': (context) => const ContributePage(),
+        'feedbackreportbug': (context) => const FeedbackAndReportPage(),
+        'contribute': (context) => const ContributePage(),
       },
       home: onboardingComplete == true
           ? const Homepage()
