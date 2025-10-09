@@ -1,6 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:vjitstudyvault/pages/subject_related_materials_page.dart';
+import 'package:vjitstudyvault/pages/materials_page.dart';
 
 class SemMaterialsPage extends StatelessWidget {
   final int? year;
