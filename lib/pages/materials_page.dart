@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'deeper_subject_related_materials_page.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
+import 'materials_page_deeper.dart';
+import '../utils/material_launcher.dart';
 
 class SubjectRelatedMaterialsPage extends StatelessWidget {
   final String subjectName;
@@ -11,58 +10,6 @@ class SubjectRelatedMaterialsPage extends StatelessWidget {
     required this.subjectName,
     required this.allMaterials,
   });
-
-  Future<void> _openInDrive(
-    BuildContext context,
-    String url,
-    String materialTitle,
-  ) async {
-    try {
-      FirebaseAnalytics.instance.logEvent(
-        name: 'file_opened_in_drive',
-        parameters: {
-          'material_title': materialTitle,
-          'subject_name': subjectName,
-        },
-      );
-      final viewUrl = _driveViewUrl(url);
-      final launched = await launchUrl(
-        Uri.parse(viewUrl),
-        mode: LaunchMode.externalApplication,
-      );
-
-      if (!launched) {
-        throw Exception('Could not open the material');
-      }
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Opening material...'),
-            backgroundColor: Colors.green,
-            duration: Duration(seconds: 2),
-          ),
-        );
-      }
-    } catch (e) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Could not open material: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    }
-  }
-
-  String _driveViewUrl(String url) {
-    final match = RegExp(r'(?:id=|/d/)([A-Za-z0-9_-]{10,})').firstMatch(url);
-    if (match != null) {
-      final id = match.group(1);
-      return 'https://drive.google.com/file/d/$id/view';
-    }
-    return url;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,15 +51,12 @@ class SubjectRelatedMaterialsPage extends StatelessWidget {
               itemBuilder: (context, index) {
                 final type = uniqueTypes[index];
                 return InkWell(
-                  onTap: () {
+                  onTap: () async {
                     final typeStr = type?.toString().toLowerCase() ?? '';
 
-                    FirebaseAnalytics.instance.logEvent(
-                      name: 'download_button_clicked',
-                      parameters: {
-                        'material_title': typeStr,
-                        'subject_name': subjectName,
-                      },
+                    await MaterialLauncher.logMaterialClick(
+                      materialTitle: typeStr,
+                      subjectName: subjectName,
                     );
 
                     if (typeStr == 'notes') {
@@ -175,10 +119,11 @@ class SubjectRelatedMaterialsPage extends StatelessWidget {
                         );
                         return;
                       }
-                      _openInDrive(
+                      await MaterialLauncher.openInDrive(
                         context,
-                        url,
-                        type?.toString() ?? 'Material',
+                        url: url,
+                        materialTitle: type?.toString() ?? 'Material',
+                        subjectName: subjectName,
                       );
                     }
                   },
