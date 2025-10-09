@@ -7,31 +7,28 @@ A structured list of planned enhancements and optimizations for the project.
 ## 📱 Platform Support
 - [ ] **iOS Builds** – Extend compatibility beyond Android.  
 - [ ] **In-App Updates** – Notify users about new versions without requiring manual downloads.
-- [ ] **PWA/Website** – Extend compatibility for Desktop Users
+- [ ] **WEBSITE❗** – Extend compatibility for Desktop Users
 
 ---
 
 ## 🎨 UI/UX Enhancements
-- [ ] **Dark Mode** – Provide a toggle for light/dark themes.  
-- [ ] **Smooth Scrolling** – Increase sensitivity for a better reading experience.  
-- [ ] **Search Inside PDFs** – Add a search bar to quickly find words.  
-- [ ] **Copy Text from PDFs** – Allow text selection and copying.  
+- [ ] **Dark Mode** – Provide a toggle for light/dark themes.    
 - [ ] **Dynamic Layouts** – Use `MediaQuery` and `LayoutBuilder` for responsive design.  
 
 ---
 
 ## ⚡ Performance & Code Quality
 - [ ] **Optimize Widget Rebuilds** – Use `flutter analyze` and `flutter doctor` to reduce unnecessary rebuilds.  
-- [ ] **Refactor Codebase** – Remove duplications, separate widgets into dedicated classes.  
+- [✅] **Refactor Codebase** – Remove duplications, separate widgets into dedicated classes.  
 - [ ] **Introduce State Management** – Adopt Provider, Riverpod, or Bloc instead of passing raw lists.  
 - [ ] **Offline-First Storage** – Implement Hive/SQLite with background download notifications.  
 
 ---
 
 ## ☁️ Backend & Data
-- [ ] **Database Migration** – Replace static JSON with Supabase/Firestore/MongoDB.  
+- [✅] **Database Migration** – Replace static JSON with Supabase/Firestore/MongoDB.  
 - [ ] **Secure Uploads** – Add authenticated endpoints for crowd contributions.  
-- [ ] **Admin-Friendly Backend** – Firestore/Supabase for easy updates.  
+- [✅] **Admin-Friendly Backend** – Firestore/Supabase for easy updates.  
 
 ---
 
