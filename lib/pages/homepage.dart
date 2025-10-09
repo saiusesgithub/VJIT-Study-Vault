@@ -3,8 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vjitstudyvault/pages/lab_materials.dart';
 import 'package:vjitstudyvault/pages/sem_materials_page.dart';
 import 'package:vjitstudyvault/pages/settings_page.dart';
-import 'dart:convert';
-import 'package:dio/dio.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -34,17 +33,11 @@ class _HomepageState extends State<Homepage> {
       _materialsLoaded = false;
     });
     try {
-      final url = 'https://vjit-study-vault.web.app/materials.json';
-      final response = await Dio().get(
-        url,
-        options: Options(
-          responseType: ResponseType.plain,
-          headers: {"Cache-Control": "no-cache"},
-        ),
-      );
-      final Map<String, dynamic> jsonData = json.decode(response.data);
+      final snapshot = await FirebaseFirestore.instance
+          .collection('materials')
+          .get();
       setState(() {
-        _materials = jsonData['items'] ?? [];
+        _materials = snapshot.docs.map((doc) => doc.data()).toList();
         _materialsLoaded = true;
       });
     } catch (e) {
