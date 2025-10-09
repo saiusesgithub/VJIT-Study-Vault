@@ -42,7 +42,7 @@ class DeeperSubjectRelatedMaterialsPage extends StatelessWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Opening material in Google Drive...'),
+            content: Text('Opening material...'),
             backgroundColor: Colors.green,
             duration: Duration(seconds: 2),
           ),
