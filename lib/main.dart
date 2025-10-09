@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vjitstudyvault/pages/contribute_page.dart';
-import 'package:vjitstudyvault/pages/feedback_and_report_page.dart';
+import 'package:vjitstudyvault/pages/feedback.dart';
 import 'package:vjitstudyvault/pages/homepage.dart';
 import 'package:vjitstudyvault/pages/onboarding_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -68,7 +68,7 @@ class _MyAppState extends State<MyApp> {
       routes: {
         'onboarding': (context) => const OnboardingPage(),
         'home': (context) => const Homepage(),
-        'feedbackreportbug': (context) => const FeedbackAndReportPage(),
+        'feedback': (context) => const FeedBack(),
         'contribute': (context) => const ContributePage(),
       },
       home: onboardingComplete == true

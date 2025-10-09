@@ -10,6 +10,11 @@ class LabMaterialsPage extends StatefulWidget {
 class _LabMaterialsPageState extends State<LabMaterialsPage> {
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text('Coming Soon!', style: TextStyle(fontSize: 24,fontFamily: 'Orbitron')));
+    return Center(
+      child: Text(
+        'Coming Soon!',
+        style: TextStyle(fontSize: 24, fontFamily: 'Orbitron'),
+      ),
+    );
   }
 }

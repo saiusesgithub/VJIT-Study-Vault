@@ -39,8 +39,6 @@ class SemMaterialsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool noInternet = false;
-
-    // Check for internet connectivity
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final connectivityResult = await Connectivity().checkConnectivity();
       if (connectivityResult == ConnectivityResult.none) {
@@ -104,7 +102,7 @@ class SemMaterialsPage extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Center(
                 child: Text(
-                  'No materials available yet for the selected ${numberWithSuffix(year)} year, ${numberWithSuffix(semester)} semester, and $branch branch. But don\'t worry, new materials are added regularly! Keep checking back for updates. Want to contribute and make a difference? Open the Settings page to learn how you can help and the benefits of contributing.',
+                  'No materials available yet for the selected ${numberWithSuffix(year)} year, ${numberWithSuffix(semester)} semester, and $branch branch. But don\'t worry, new materials are added regularly! Keep checking back for updates.',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,

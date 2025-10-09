@@ -19,8 +19,6 @@ class _HomepageState extends State<Homepage> {
   String? branch;
   bool _prefsLoaded = false;
   int currentIndex = 0;
-  // Remove pages list, build with up-to-date data in build()
-
   List<dynamic> _materials = [];
   bool _materialsLoaded = false;
 
@@ -102,7 +100,7 @@ class _HomepageState extends State<Homepage> {
         title: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Image.asset('assets/logos/vjit_logo.png', height: 32, width: 32),
+            Image.asset('assets/logos/VjitLogo.png', height: 32, width: 32),
             const SizedBox(width: 8),
             const Text(
               'VJIT STUDY VAULT',
@@ -136,21 +134,5 @@ class _HomepageState extends State<Homepage> {
         },
       ),
     );
-  }
-
-  String numberWithSuffix(int? year) {
-    if (year == null) return '';
-    switch (year) {
-      case 1:
-        return '1st';
-      case 2:
-        return '2nd';
-      case 3:
-        return '3rd';
-      case 4:
-        return '4th';
-      default:
-        return '$year';
-    }
   }
 }
