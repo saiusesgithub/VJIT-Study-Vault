@@ -20,14 +20,11 @@ class SettingsPage extends StatelessWidget {
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: contentMaxWidth),
           child: SizedBox(
-            height:
-                MediaQuery.of(context).size.height - 90, // Set specific height
+            height: MediaQuery.of(context).size.height - 90,
             child: Column(
-              mainAxisAlignment:
-                  MainAxisAlignment.spaceBetween, // Distribute elements evenly
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // About card
                 SizedBox(
                   width: double.infinity,
                   height: 140,
@@ -64,12 +61,9 @@ class SettingsPage extends StatelessWidget {
                                 iconSize: 25,
                                 icon: const Icon(Ionicons.logo_github),
                                 onPressed: () {
-                                  // Log social link click event for GitHub
                                   FirebaseAnalytics.instance.logEvent(
                                     name: 'social_link_clicked',
-                                    parameters: {
-                                      'platform': 'github',
-                                    },
+                                    parameters: {'platform': 'github'},
                                   );
 
                                   launchUrl(
@@ -84,12 +78,9 @@ class SettingsPage extends StatelessWidget {
                                 iconSize: 25,
                                 icon: const Icon(Ionicons.logo_linkedin),
                                 onPressed: () {
-                                  // Log social link click event for LinkedIn
                                   FirebaseAnalytics.instance.logEvent(
                                     name: 'social_link_clicked',
-                                    parameters: {
-                                      'platform': 'linkedin',
-                                    },
+                                    parameters: {'platform': 'linkedin'},
                                   );
 
                                   launchUrl(
@@ -104,12 +95,9 @@ class SettingsPage extends StatelessWidget {
                                 iconSize: 25,
                                 icon: const Icon(Ionicons.logo_instagram),
                                 onPressed: () {
-                                  // Log social link click event for Instagram
                                   FirebaseAnalytics.instance.logEvent(
                                     name: 'social_link_clicked',
-                                    parameters: {
-                                      'platform': 'instagram',
-                                    },
+                                    parameters: {'platform': 'instagram'},
                                   );
 
                                   launchUrl(
@@ -126,13 +114,7 @@ class SettingsPage extends StatelessWidget {
                     ),
                   ),
                 ),
-
-                const SizedBox(height: 16),
-
-                // Branch/Year/Semester edit button
-                const SizedBox(height: 12),
-
-                // Bottom: action buttons
+                const SizedBox(height: 28),
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -159,7 +141,7 @@ class SettingsPage extends StatelessWidget {
                     const SizedBox(height: 12),
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, '/feedback_report_bug');
+                        Navigator.pushNamed(context, 'feedback');
                       },
                       style: ElevatedButton.styleFrom(
                         minimumSize: const Size.fromHeight(48),
@@ -169,7 +151,7 @@ class SettingsPage extends StatelessWidget {
                     const SizedBox(height: 12),
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, '/contribute');
+                        Navigator.pushNamed(context, 'contribute');
                       },
                       style: ElevatedButton.styleFrom(
                         minimumSize: const Size.fromHeight(48),
@@ -286,190 +268,6 @@ class SettingsPage extends StatelessWidget {
           },
         );
       },
-    );
-  }
-}
-
-// change branch / year / semester
-class _BranchYearSemRow extends StatefulWidget {
-  @override
-  State<_BranchYearSemRow> createState() => _BranchYearSemRowState();
-}
-
-class _BranchYearSemRowState extends State<_BranchYearSemRow> {
-  String? branch;
-  int? year;
-  int? semester;
-  bool loading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadPrefs();
-  }
-
-  Future<void> _loadPrefs() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      branch = prefs.getString('branch') ?? '-';
-      year = prefs.getInt('year');
-      semester = prefs.getInt('semester');
-      loading = false;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (loading) return const SizedBox.shrink();
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Card(
-            elevation: 2,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Current Selection',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Branch: $branch\nYear: ${year ?? '-'}\nSemester: ${semester ?? '-'}',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 12),
-          Center(
-            child: OutlinedButton(
-              onPressed: () {
-                // Trigger the dialog from here
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return StatefulBuilder(
-                      builder: (context, setDialogState) {
-                        return AlertDialog(
-                          title: const Text('Change Branch / Year / Semester'),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              DropdownButtonFormField<String>(
-                                initialValue: branch,
-                                items:
-                                    ['CSE', 'IT', 'ECE', 'EEE', 'MECH', 'CIVIL']
-                                        .map(
-                                          (b) => DropdownMenuItem(
-                                            value: b,
-                                            child: Text(b),
-                                          ),
-                                        )
-                                        .toList(),
-                                onChanged: (v) =>
-                                    setDialogState(() => branch = v),
-                                decoration: const InputDecoration(
-                                  labelText: 'Branch',
-                                  border: OutlineInputBorder(),
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                              DropdownButtonFormField<int>(
-                                initialValue: year,
-                                items: [1, 2, 3, 4]
-                                    .map(
-                                      (y) => DropdownMenuItem(
-                                        value: y,
-                                        child: Text('Year $y'),
-                                      ),
-                                    )
-                                    .toList(),
-                                onChanged: (v) =>
-                                    setDialogState(() => year = v),
-                                decoration: const InputDecoration(
-                                  labelText: 'Year',
-                                  border: OutlineInputBorder(),
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                              DropdownButtonFormField<int>(
-                                initialValue: semester,
-                                items: [1, 2]
-                                    .map(
-                                      (s) => DropdownMenuItem(
-                                        value: s,
-                                        child: Text('Semester $s'),
-                                      ),
-                                    )
-                                    .toList(),
-                                onChanged: (v) =>
-                                    setDialogState(() => semester = v),
-                                decoration: const InputDecoration(
-                                  labelText: 'Semester',
-                                  border: OutlineInputBorder(),
-                                ),
-                              ),
-                            ],
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text('Cancel'),
-                            ),
-                            ElevatedButton(
-                              onPressed: () async {
-                                final prefs =
-                                    await SharedPreferences.getInstance();
-                                if (branch != null &&
-                                    year != null &&
-                                    semester != null) {
-                                  await prefs.setString('branch', branch!);
-                                  await prefs.setInt('year', year!);
-                                  await prefs.setInt('semester', semester!);
-                                  Navigator.pop(context);
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                      title: const Text('Restart Required'),
-                                      content: const Text(
-                                        'Please restart the app to apply the changes.',
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context),
-                                          child: const Text('OK'),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }
-                              },
-                              child: const Text('Save'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                );
-              },
-              child: const Text('Edit'),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
