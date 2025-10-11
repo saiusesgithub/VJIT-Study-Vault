@@ -89,6 +89,7 @@ class _HomepageState extends State<Homepage> {
         body = const SizedBox.shrink();
     }
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: Row(
           mainAxisSize: MainAxisSize.min,
@@ -97,13 +98,33 @@ class _HomepageState extends State<Homepage> {
             const SizedBox(width: 8),
             const Text(
               'VJIT STUDY VAULT',
-              style: TextStyle(fontFamily: 'Orbitron'),
+              style: TextStyle(
+                fontFamily: 'Orbitron',
+                fontWeight: FontWeight.bold,
+                shadows: [
+                  Shadow(
+                    color: Colors.black26,
+                    offset: Offset(0, 2),
+                    blurRadius: 4,
+                  ),
+                ],
+              ),
             ),
           ],
         ),
         centerTitle: true,
       ),
-      body: body,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFF1A237E), Color(0xFF0D47A1), Color(0xFF00838F)],
+            stops: [0.0, 0.5, 1.0],
+          ),
+        ),
+        child: body,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(

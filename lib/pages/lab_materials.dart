@@ -13,7 +13,15 @@ class _LabMaterialsPageState extends State<LabMaterialsPage> {
     return Center(
       child: Text(
         'Coming Soon!',
-        style: TextStyle(fontSize: 24, fontFamily: 'Orbitron'),
+        style: TextStyle(
+          fontSize: 24,
+          fontFamily: 'Orbitron',
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+          shadows: [
+            Shadow(color: Colors.black45, offset: Offset(0, 2), blurRadius: 4),
+          ],
+        ),
       ),
     );
   }
