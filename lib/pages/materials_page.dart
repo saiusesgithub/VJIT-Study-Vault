@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'materials_page_deeper.dart';
 import '../utils/material_launcher.dart';
 import '../utils/glassmorphic_elements.dart';
+import '../utils/animations.dart';
 
 class SubjectRelatedMaterialsPage extends StatelessWidget {
   final String subjectName;
@@ -71,8 +72,11 @@ class SubjectRelatedMaterialsPage extends StatelessWidget {
                 itemCount: uniqueTypes.length,
                 itemBuilder: (context, index) {
                   final type = uniqueTypes[index];
-                  return InkWell(
-                    onTap: () async {
+                  return StaggeredAnimation(
+                    index: index,
+                    child: ScaleAnimation(
+                      child: InkWell(
+                      onTap: () async {
                       final typeStr = type?.toString().toLowerCase() ?? '';
 
                       await MaterialLauncher.logMaterialClick(
@@ -92,13 +96,12 @@ class SubjectRelatedMaterialsPage extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                DeeperSubjectRelatedMaterialsPage(
-                                  subjectName: subjectName,
-                                  materials: notesMaterials,
-                                  labelKey: 'unit',
-                                  cardLabelPrefix: 'Unit',
-                                ),
+                            builder: (context) => DeeperSubjectRelatedMaterialsPage(
+                              subjectName: subjectName,
+                              materials: notesMaterials,
+                              labelKey: 'unit',
+                              cardLabelPrefix: 'Unit',
+                            ),
                           ),
                         );
                       } else if (typeStr == 'pyq' ||
@@ -115,13 +118,12 @@ class SubjectRelatedMaterialsPage extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                DeeperSubjectRelatedMaterialsPage(
-                                  subjectName: subjectName,
-                                  materials: pyqMaterials,
-                                  labelKey: 'pyq_year',
-                                  cardLabelPrefix: 'Year',
-                                ),
+                            builder: (context) => DeeperSubjectRelatedMaterialsPage(
+                              subjectName: subjectName,
+                              materials: pyqMaterials,
+                              labelKey: 'pyq_year',
+                              cardLabelPrefix: 'Year',
+                            ),
                           ),
                         );
                       } else {
@@ -149,7 +151,7 @@ class SubjectRelatedMaterialsPage extends StatelessWidget {
                       }
                     },
                     child: GlassmorphicContainer(
-                      blur: 15,
+                      blur: 8,
                       opacity: 0.25,
                       borderRadius: BorderRadius.circular(16),
                       padding: const EdgeInsets.all(16.0),
@@ -174,6 +176,8 @@ class SubjectRelatedMaterialsPage extends StatelessWidget {
                           maxLines: 2,
                         ),
                       ),
+                    ),
+                    ),
                     ),
                   );
                 },

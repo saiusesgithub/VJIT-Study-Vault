@@ -2,6 +2,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:vjitstudyvault/pages/materials_page.dart';
 import 'package:vjitstudyvault/utils/glassmorphic_elements.dart';
+import 'package:vjitstudyvault/utils/animations.dart';
 
 class SemMaterialsPage extends StatelessWidget {
   final int? year;
@@ -157,8 +158,11 @@ class SemMaterialsPage extends StatelessWidget {
                   itemCount: filteredMaterials.length,
                   itemBuilder: (context, index) {
                     final item = filteredMaterials[index];
-                    return InkWell(
-                      onTap: () {
+                    return StaggeredAnimation(
+                      index: index,
+                      child: ScaleAnimation(
+                        child: InkWell(
+                        onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -168,9 +172,9 @@ class SemMaterialsPage extends StatelessWidget {
                             ),
                           ),
                         );
-                      },
-                      child: GlassmorphicContainer(
-                        blur: 15,
+                        },
+                        child: GlassmorphicContainer(
+                        blur: 8,
                         opacity: 0.25,
                         borderRadius: BorderRadius.circular(16),
                         padding: const EdgeInsets.all(12.0),
@@ -216,6 +220,8 @@ class SemMaterialsPage extends StatelessWidget {
                                   ),
                           ],
                         ),
+                      ),
+                      ),
                       ),
                     );
                   },

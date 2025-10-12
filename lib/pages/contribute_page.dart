@@ -40,11 +40,7 @@ class _ContributePageState extends State<ContributePage> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF1A237E),
-              Color(0xFF0D47A1),
-              Color(0xFF00838F),
-            ],
+            colors: [Color(0xFF1A237E), Color(0xFF0D47A1), Color(0xFF00838F)],
             stops: [0.0, 0.5, 1.0],
           ),
         ),
@@ -103,24 +99,10 @@ class _ContributePageState extends State<ContributePage> {
                           );
                           launchUrl(whatsappUri);
                         },
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Ionicons.logo_whatsapp,
-                              color: Colors.white,
-                              size: 28,
-                            ),
-                            SizedBox(width: 12),
-                            Text(
-                              'Contact via WhatsApp',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
+                        child: Icon(
+                          Ionicons.logo_whatsapp,
+                          color: Colors.white,
+                          size: 32,
                         ),
                       ),
                     ),

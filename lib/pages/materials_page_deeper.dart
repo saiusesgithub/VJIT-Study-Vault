@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../utils/material_launcher.dart';
 import '../utils/glassmorphic_elements.dart';
+import '../utils/animations.dart';
 
 class DeeperSubjectRelatedMaterialsPage extends StatelessWidget {
   final String subjectName;
@@ -64,53 +65,58 @@ class DeeperSubjectRelatedMaterialsPage extends StatelessWidget {
                 final labelValue = material[labelKey];
                 final url = material['url'];
 
-                return InkWell(
-                  onTap: () async {
-                    if (url == null || url.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            'No content available for $cardLabelPrefix $labelValue',
-                          ),
-                        ),
-                      );
-                      return;
-                    }
-
-                    if (material['type'] == 'Video') {
-                      await MaterialLauncher.openVideo(context, url: url);
-                    } else {
-                      await MaterialLauncher.openInDrive(
-                        context,
-                        url: url,
-                        materialTitle: '$cardLabelPrefix $labelValue',
-                        subjectName: subjectName,
-                      );
-                    }
-                  },
-                  child: GlassmorphicContainer(
-                    blur: 15,
-                    opacity: 0.25,
-                    borderRadius: BorderRadius.circular(16),
-                    padding: const EdgeInsets.all(16.0),
-                    child: Center(
-                      child: Text(
-                        '$cardLabelPrefix $labelValue',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Orbitron',
-                          fontSize: 15,
-                          color: Colors.white,
-                          shadows: [
-                            Shadow(
-                              color: Colors.black38,
-                              offset: Offset(0, 1),
-                              blurRadius: 2,
+                return StaggeredAnimation(
+                  index: idx,
+                  child: ScaleAnimation(
+                    child: InkWell(
+                      onTap: () async {
+                      if (url == null || url.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'No content available for $cardLabelPrefix $labelValue',
                             ),
-                          ],
+                          ),
+                        );
+                        return;
+                      }
+
+                      if (material['type'] == 'Video') {
+                        await MaterialLauncher.openVideo(context, url: url);
+                      } else {
+                        await MaterialLauncher.openInDrive(
+                          context,
+                          url: url,
+                          materialTitle: '$cardLabelPrefix $labelValue',
+                          subjectName: subjectName,
+                        );
+                      }
+                    },
+                    child: GlassmorphicContainer(
+                      blur: 8,
+                      opacity: 0.25,
+                      borderRadius: BorderRadius.circular(16),
+                      padding: const EdgeInsets.all(16.0),
+                      child: Center(
+                        child: Text(
+                          '$cardLabelPrefix $labelValue',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Orbitron',
+                            fontSize: 15,
+                            color: Colors.white,
+                            shadows: [
+                              Shadow(
+                                color: Colors.black38,
+                                offset: Offset(0, 1),
+                                blurRadius: 2,
+                              ),
+                            ],
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                        textAlign: TextAlign.center,
                       ),
+                    ),
                     ),
                   ),
                 );

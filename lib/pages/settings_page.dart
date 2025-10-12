@@ -4,6 +4,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'dart:math';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:vjitstudyvault/pages/feedback.dart';
+import 'package:vjitstudyvault/pages/contribute_page.dart';
 import '../utils/glassmorphic_elements.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -19,7 +21,7 @@ class SettingsPage extends StatelessWidget {
       padding: EdgeInsets.only(
         left: 16.0,
         right: 16.0,
-        top: MediaQuery.of(context).padding.top + kToolbarHeight + 16,
+        top: MediaQuery.of(context).padding.top + kToolbarHeight + 8,
         bottom: 16.0,
       ),
       child: Center(
@@ -32,7 +34,7 @@ class SettingsPage extends StatelessWidget {
                 kToolbarHeight -
                 90,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(
@@ -129,7 +131,7 @@ class SettingsPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 28),
+                const Spacer(),
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -171,42 +173,18 @@ class SettingsPage extends StatelessWidget {
                         onTap: () async {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Row(
-                                children: [
-                                  SizedBox(
-                                    width: 20,
-                                    height: 20,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(width: 16),
-                                  Text('Fetching new materials...'),
-                                ],
-                              ),
-                              duration: Duration(seconds: 2),
+                              content: Text('Checking for new materials...'),
+                              duration: Duration(milliseconds: 1500),
                             ),
                           );
+                          
                           await loadMaterials();
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.check_circle,
-                                      color: Colors.white,
-                                      size: 20,
-                                    ),
-                                    SizedBox(width: 12),
-                                    Text('Materials updated!'),
-                                  ],
-                                ),
+                                content: Text('✓ Materials updated!'),
                                 backgroundColor: Colors.green.shade700,
-                                duration: Duration(seconds: 2),
+                                duration: Duration(milliseconds: 1500),
                               ),
                             );
                           }
@@ -238,7 +216,12 @@ class SettingsPage extends StatelessWidget {
                       ),
                       child: InkWell(
                         onTap: () {
-                          Navigator.pushNamed(context, 'feedback');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FeedBack(),
+                            ),
+                          );
                         },
                         child: const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -267,7 +250,12 @@ class SettingsPage extends StatelessWidget {
                       ),
                       child: InkWell(
                         onTap: () {
-                          Navigator.pushNamed(context, 'contribute');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ContributePage(),
+                            ),
+                          );
                         },
                         child: const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
