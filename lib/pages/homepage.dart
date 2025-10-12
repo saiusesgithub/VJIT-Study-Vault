@@ -64,8 +64,22 @@ class _HomepageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
-    if (!_prefsLoaded || !_materialsLoaded) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    if (!_prefsLoaded) {
+      return Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF1A237E),
+              Color(0xFF0D47A1),
+              Color(0xFF00838F),
+            ],
+            stops: [0.0, 0.5, 1.0],
+          ),
+        ),
+        child: const Center(child: CircularProgressIndicator(color: Colors.white)),
+      );
     }
     Widget body;
     switch (currentIndex) {

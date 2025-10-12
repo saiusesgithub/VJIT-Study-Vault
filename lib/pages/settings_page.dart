@@ -16,12 +16,21 @@ class SettingsPage extends StatelessWidget {
     final contentMaxWidth = min(screenWidth - 32.0, 520.0);
 
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: EdgeInsets.only(
+        left: 16.0,
+        right: 16.0,
+        top: MediaQuery.of(context).padding.top + kToolbarHeight + 16,
+        bottom: 16.0,
+      ),
       child: Center(
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: contentMaxWidth),
           child: SizedBox(
-            height: MediaQuery.of(context).size.height - 90,
+            height:
+                MediaQuery.of(context).size.height -
+                MediaQuery.of(context).padding.top -
+                kToolbarHeight -
+                90,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -159,11 +168,48 @@ class SettingsPage extends StatelessWidget {
                         vertical: 14,
                       ),
                       child: InkWell(
-                        onTap: () {
-                          loadMaterials();
+                        onTap: () async {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Fetched new materials!')),
+                            SnackBar(
+                              content: Row(
+                                children: [
+                                  SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 16),
+                                  Text('Fetching new materials...'),
+                                ],
+                              ),
+                              duration: Duration(seconds: 2),
+                            ),
                           );
+                          await loadMaterials();
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.check_circle,
+                                      color: Colors.white,
+                                      size: 20,
+                                    ),
+                                    SizedBox(width: 12),
+                                    Text('Materials updated!'),
+                                  ],
+                                ),
+                                backgroundColor: Colors.green.shade700,
+                                duration: Duration(seconds: 2),
+                              ),
+                            );
+                          }
                         },
                         child: const Row(
                           mainAxisAlignment: MainAxisAlignment.center,

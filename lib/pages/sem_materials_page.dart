@@ -114,7 +114,10 @@ class SemMaterialsPage extends StatelessWidget {
             );
           }
           return ListView(
-            padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 0),
+            padding: EdgeInsets.only(
+              top: MediaQuery.of(context).padding.top + kToolbarHeight + 24,
+              bottom: 24,
+            ),
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
