@@ -1,6 +1,8 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:vjitstudyvault/pages/materials_page.dart';
+import 'package:vjitstudyvault/utils/glassmorphic_elements.dart';
+import 'package:vjitstudyvault/utils/animations.dart';
 
 class SemMaterialsPage extends StatelessWidget {
   final int? year;
@@ -113,21 +115,35 @@ class SemMaterialsPage extends StatelessWidget {
             );
           }
           return ListView(
-            padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 0),
+            padding: EdgeInsets.only(
+              top: MediaQuery.of(context).padding.top + kToolbarHeight + 24,
+              bottom: 24,
+            ),
             children: [
-              Text(
-                'Materials Of '
-                '${numberWithSuffix(year)} year '
-                '${numberWithSuffix(semester)} sem \nof '
-                '${branch ?? 'Not set'} branch',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Orbitron',
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Text(
+                  'Materials Of '
+                  '${numberWithSuffix(year)} year '
+                  '${numberWithSuffix(semester)} sem \nof '
+                  '${branch ?? 'Not set'} branch',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Orbitron',
+                    color: Colors.white,
+                    shadows: [
+                      Shadow(
+                        color: Colors.black45,
+                        offset: Offset(0, 2),
+                        blurRadius: 4,
+                      ),
+                    ],
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 24),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: GridView.builder(
@@ -142,8 +158,11 @@ class SemMaterialsPage extends StatelessWidget {
                   itemCount: filteredMaterials.length,
                   itemBuilder: (context, index) {
                     final item = filteredMaterials[index];
-                    return InkWell(
-                      onTap: () {
+                    return StaggeredAnimation(
+                      index: index,
+                      child: ScaleAnimation(
+                        child: InkWell(
+                        onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -153,50 +172,56 @@ class SemMaterialsPage extends StatelessWidget {
                             ),
                           ),
                         );
-                      },
-                      child: Card(
-                        elevation: 2,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                item['subject'] ?? '',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  fontFamily: 'Orbitron',
-                                ),
-                                textAlign: TextAlign.center,
+                        },
+                        child: GlassmorphicContainer(
+                        blur: 8,
+                        opacity: 0.25,
+                        borderRadius: BorderRadius.circular(16),
+                        padding: const EdgeInsets.all(12.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              item['subject'] ?? '',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                fontFamily: 'Orbitron',
+                                color: Colors.white,
+                                shadows: [
+                                  Shadow(
+                                    color: Colors.black38,
+                                    offset: Offset(0, 1),
+                                    blurRadius: 2,
+                                  ),
+                                ],
                               ),
-                              const SizedBox(height: 10),
-                              item['textbook_url'] != null
-                                  ? Image.network(
-                                      item['textbook_url'],
-                                      height: 40,
-                                      width: 40,
-                                      fit: BoxFit.contain,
-                                      errorBuilder:
-                                          (context, error, stackTrace) {
-                                            return const Icon(
-                                              Icons.book,
-                                              size: 40,
-                                              color: Colors.grey,
-                                            );
-                                          },
-                                    )
-                                  : const Icon(
-                                      Icons.book,
-                                      size: 40,
-                                      color: Colors.grey,
-                                    ),
-                            ],
-                          ),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 10),
+                            item['textbook_url'] != null
+                                ? Image.network(
+                                    item['textbook_url'],
+                                    height: 40,
+                                    width: 40,
+                                    fit: BoxFit.contain,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return const Icon(
+                                        Icons.book,
+                                        size: 40,
+                                        color: Colors.white70,
+                                      );
+                                    },
+                                  )
+                                : const Icon(
+                                    Icons.book,
+                                    size: 40,
+                                    color: Colors.white70,
+                                  ),
+                          ],
                         ),
+                      ),
+                      ),
                       ),
                     );
                   },

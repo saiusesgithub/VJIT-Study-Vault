@@ -4,6 +4,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'dart:math';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:vjitstudyvault/pages/feedback.dart';
+import 'package:vjitstudyvault/pages/contribute_page.dart';
+import '../utils/glassmorphic_elements.dart';
 
 class SettingsPage extends StatelessWidget {
   final Future<void> Function() loadMaterials;
@@ -15,148 +18,261 @@ class SettingsPage extends StatelessWidget {
     final contentMaxWidth = min(screenWidth - 32.0, 520.0);
 
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: EdgeInsets.only(
+        left: 16.0,
+        right: 16.0,
+        top: MediaQuery.of(context).padding.top + kToolbarHeight + 8,
+        bottom: 16.0,
+      ),
       child: Center(
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: contentMaxWidth),
           child: SizedBox(
-            height: MediaQuery.of(context).size.height - 90,
+            height:
+                MediaQuery.of(context).size.height -
+                MediaQuery.of(context).padding.top -
+                kToolbarHeight -
+                90,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(
                   width: double.infinity,
                   height: 140,
-                  child: Card(
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                  child: GlassmorphicContainer(
+                    blur: 15,
+                    opacity: 0.25,
+                    borderRadius: BorderRadius.circular(16),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 8.0,
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0,
-                        vertical: 8.0,
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            "Made by sAI sRUJAN",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 17,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          "Made by sAI sRUJAN",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 17,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        const Text(
+                          "2024-2028 IT Student @ VJIT",
+                          style: TextStyle(fontSize: 13, color: Colors.white70),
+                        ),
+                        const SizedBox(height: 5),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            IconButton(
+                              iconSize: 25,
+                              icon: const Icon(
+                                Ionicons.logo_github,
+                                color: Colors.white,
+                              ),
+                              onPressed: () {
+                                FirebaseAnalytics.instance.logEvent(
+                                  name: 'social_link_clicked',
+                                  parameters: {'platform': 'github'},
+                                );
+
+                                launchUrl(
+                                  Uri.parse("https://github.com/saiusesgithub"),
+                                );
+                              },
                             ),
-                          ),
-                          const SizedBox(height: 5),
-                          const Text(
-                            "2024-2028 IT Student @ VJIT",
-                            style: TextStyle(fontSize: 13),
-                          ),
-                          const SizedBox(height: 5),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              IconButton(
-                                iconSize: 25,
-                                icon: const Icon(Ionicons.logo_github),
-                                onPressed: () {
-                                  FirebaseAnalytics.instance.logEvent(
-                                    name: 'social_link_clicked',
-                                    parameters: {'platform': 'github'},
-                                  );
-
-                                  launchUrl(
-                                    Uri.parse(
-                                      "https://github.com/saiusesgithub",
-                                    ),
-                                  );
-                                },
+                            const SizedBox(width: 8),
+                            IconButton(
+                              iconSize: 25,
+                              icon: const Icon(
+                                Ionicons.logo_linkedin,
+                                color: Colors.white,
                               ),
-                              const SizedBox(width: 8),
-                              IconButton(
-                                iconSize: 25,
-                                icon: const Icon(Ionicons.logo_linkedin),
-                                onPressed: () {
-                                  FirebaseAnalytics.instance.logEvent(
-                                    name: 'social_link_clicked',
-                                    parameters: {'platform': 'linkedin'},
-                                  );
+                              onPressed: () {
+                                FirebaseAnalytics.instance.logEvent(
+                                  name: 'social_link_clicked',
+                                  parameters: {'platform': 'linkedin'},
+                                );
 
-                                  launchUrl(
-                                    Uri.parse(
-                                      "https://linkedin.com/in/saisrujanpunati",
-                                    ),
-                                  );
-                                },
+                                launchUrl(
+                                  Uri.parse(
+                                    "https://linkedin.com/in/saisrujanpunati",
+                                  ),
+                                );
+                              },
+                            ),
+                            const SizedBox(width: 8),
+                            IconButton(
+                              iconSize: 25,
+                              icon: const Icon(
+                                Ionicons.logo_instagram,
+                                color: Colors.white,
                               ),
-                              const SizedBox(width: 8),
-                              IconButton(
-                                iconSize: 25,
-                                icon: const Icon(Ionicons.logo_instagram),
-                                onPressed: () {
-                                  FirebaseAnalytics.instance.logEvent(
-                                    name: 'social_link_clicked',
-                                    parameters: {'platform': 'instagram'},
-                                  );
+                              onPressed: () {
+                                FirebaseAnalytics.instance.logEvent(
+                                  name: 'social_link_clicked',
+                                  parameters: {'platform': 'instagram'},
+                                );
 
-                                  launchUrl(
-                                    Uri.parse(
-                                      "https://instagram.com/__saisrujan__",
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                                launchUrl(
+                                  Uri.parse(
+                                    "https://instagram.com/__saisrujan__",
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 ),
-                const SizedBox(height: 28),
+                const Spacer(),
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    OutlinedButton(
-                      onPressed: () => _showChangeDialog(context),
-                      style: OutlinedButton.styleFrom(
-                        minimumSize: const Size.fromHeight(48),
+                    GlassmorphicContainer(
+                      blur: 12,
+                      opacity: 0.2,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 14,
                       ),
-                      child: const Text('Edit Branch / Year / Semester'),
+                      child: InkWell(
+                        onTap: () => _showChangeDialog(context),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.edit, color: Colors.white, size: 20),
+                            SizedBox(width: 8),
+                            Text(
+                              'Edit Branch / Year / Semester',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 12),
-                    ElevatedButton(
-                      onPressed: () {
-                        loadMaterials();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Fetched new materials!')),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size.fromHeight(48),
+                    GlassmorphicContainer(
+                      blur: 12,
+                      opacity: 0.2,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 14,
                       ),
-                      child: const Text('Check For New Materials'),
+                      child: InkWell(
+                        onTap: () async {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Checking for new materials...'),
+                              duration: Duration(milliseconds: 1500),
+                            ),
+                          );
+                          
+                          await loadMaterials();
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('✓ Materials updated!'),
+                                backgroundColor: Colors.green.shade700,
+                                duration: Duration(milliseconds: 1500),
+                              ),
+                            );
+                          }
+                        },
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.refresh, color: Colors.white, size: 20),
+                            SizedBox(width: 8),
+                            Text(
+                              'Check For New Materials',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 12),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, 'feedback');
-                      },
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size.fromHeight(48),
+                    GlassmorphicContainer(
+                      blur: 12,
+                      opacity: 0.2,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 14,
                       ),
-                      child: const Text('Feedback / Report Bug'),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FeedBack(),
+                            ),
+                          );
+                        },
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.feedback, color: Colors.white, size: 20),
+                            SizedBox(width: 8),
+                            Text(
+                              'Feedback / Report Bug',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 12),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, 'contribute');
-                      },
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size.fromHeight(48),
+                    GlassmorphicContainer(
+                      blur: 12,
+                      opacity: 0.2,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 14,
                       ),
-                      child: const Text('Contribute'),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ContributePage(),
+                            ),
+                          );
+                        },
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.upload, color: Colors.white, size: 20),
+                            SizedBox(width: 8),
+                            Text(
+                              'Contribute',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ],
                 ),

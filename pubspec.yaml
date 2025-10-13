@@ -38,6 +38,7 @@ dependencies:
   cloud_firestore: ^6.0.2
   introduction_screen: ^4.0.0
   page_animation_transition: ^1.0.0
+  page_transition: ^2.1.0
   android_intent_plus: ^6.0.0
   connectivity_plus: ^7.0.0
 
