@@ -70,15 +70,13 @@ class _HomepageState extends State<Homepage> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF1A237E),
-              Color(0xFF0D47A1),
-              Color(0xFF00838F),
-            ],
+            colors: [Color(0xFF1A237E), Color(0xFF0D47A1), Color(0xFF00838F)],
             stops: [0.0, 0.5, 1.0],
           ),
         ),
-        child: const Center(child: CircularProgressIndicator(color: Colors.white)),
+        child: const Center(
+          child: CircularProgressIndicator(color: Colors.white),
+        ),
       );
     }
     Widget body;
@@ -110,7 +108,11 @@ class _HomepageState extends State<Homepage> {
           children: [
             Hero(
               tag: 'app_logo',
-              child: Image.asset('assets/logos/VjitLogo.png', height: 32, width: 32),
+              child: Image.asset(
+                'assets/logos/AppLogo.png',
+                height: 32,
+                width: 32,
+              ),
             ),
             const SizedBox(width: 8),
             const Text(

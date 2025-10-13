@@ -1,7 +1,7 @@
 # 🎓 VJIT Study Vault
 
 <div align="center">
-<img src="assets/logos/VjitLogo.png" alt="App Logo" width="300" height="300">
+<img src="assets/logos/AppLogo.png" alt="App Logo" width="300" height="300">
 
 *Your Complete Academic Companion for VJIT Students*
 
